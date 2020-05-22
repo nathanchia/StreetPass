@@ -1,19 +1,24 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from'@react-navigation/drawer';
+
+import AuthStack from './stacks/AuthStack';
+import HomeTabs from './tabs/HomeTabs';
+
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
+    <NavigationContainer>
+      <Drawer.Navigator>
+        <Drawer.Screen name='HomeTabs' component={HomeTabs} />
+        <Drawer.Screen name='Auth' component={AuthStack} />
+      </Drawer.Navigator>
+    </NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+ 
 });
