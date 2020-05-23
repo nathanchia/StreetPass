@@ -5,7 +5,7 @@ import { createDrawerNavigator } from'@react-navigation/drawer';
 
 import LoadingScreen from './screens/LoadingScreen'
 import AuthStack from './stacks/AuthStack';
-import HomeTabs from './tabs/HomeTabs';
+import RootStack from './stacks/RootStack';
 import { AuthContext } from './contexts/AuthContext'
 
 const Drawer = createDrawerNavigator();
@@ -44,13 +44,7 @@ export default function App() {
     return (
       <AuthContext.Provider value={authContext}>
         <NavigationContainer>
-          {userToken ? ( 
-            <Drawer.Navigator>
-              <Drawer.Screen name='HomeTabs' component={HomeTabs} />
-            </Drawer.Navigator>) : (
-              <AuthStack />
-            )
-          }
+          {userToken ? (<RootStack />) : (<AuthStack />)}
         </NavigationContainer>
       </AuthContext.Provider>
     )

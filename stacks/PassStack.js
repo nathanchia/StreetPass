@@ -4,9 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { PassInfoContext } from '../contexts/PassInfoContext';
 import PassListScreen from '../screens/PassListScreen';
-import PassDisplayScreen from '../screens/PassDisplayScreen';
 
-const StreetPassStack = createStackNavigator();
+const PassStack = createStackNavigator();
 
 export default ({ navigation }) => {
   const[testInfo, setTestInfo] = useState([
@@ -17,8 +16,8 @@ export default ({ navigation }) => {
   
   return (
     <PassInfoContext.Provider value={testInfo}>
-      <StreetPassStack.Navigator>
-        <StreetPassStack.Screen 
+      <PassStack.Navigator>
+        <PassStack.Screen 
           name='PassListScreen' 
           component={PassListScreen} 
           options={{
@@ -27,8 +26,7 @@ export default ({ navigation }) => {
             headerLeft: () => (<Button onPress={() => {navigation.openDrawer()}} title="Info" color="#000000"/>)
           }} 
         />
-        <StreetPassStack.Screen name='PassDisplayScreen' component={PassDisplayScreen} options={{ title:''}} />
-      </StreetPassStack.Navigator>
+      </PassStack.Navigator>
     </PassInfoContext.Provider>
   )
 }

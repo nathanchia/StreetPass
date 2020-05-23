@@ -4,21 +4,21 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import FavouritesScreen from '../screens/FavouritesScreen';
 
-const FavStack = createStackNavigator();
+const FavouritesStack = createStackNavigator();
 
 export default ({ navigation }) => {
   return (
-      <FavStack.Navigator>
-          <FavStack.Screen 
+      <FavouritesStack.Navigator>
+          <FavouritesStack.Screen 
             name='FavScreen' 
             component={FavouritesScreen} 
             options={{
-              title:'Street Passes',  
+              title:'Favourites',  
               headerTitleAlign :'center', 
               headerLeft: () => (<Button onPress={() => {navigation.openDrawer()}} title="Info" color="#000000"/>)
             }}
           />
-      </FavStack.Navigator>
+      </FavouritesStack.Navigator>
   )
 }
 

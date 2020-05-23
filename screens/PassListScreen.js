@@ -9,7 +9,7 @@ export default ({ navigation }) => {
   
     return (
     <View>
-      <FlatList data={passInfoArray} renderItem={passInfo => <Button title={passInfo.item.name} onPress={()=>{navigation.push('PassDisplayScreen', {passInfo: passInfo.item})}}/>} />
+      <FlatList data={passInfoArray} renderItem={passInfo => <Button title={passInfo.item.name} onPress={()=>{navigation.navigate('PassDisplayScreen', {passInfo: passInfo.item})}}/>} />
     </View>
   )
 }
