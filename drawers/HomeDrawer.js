@@ -11,7 +11,6 @@ export default () => {
   return (
     <HomeDrawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} >
         <HomeDrawer.Screen name='Home' component={HomeTabs} />
-        <HomeDrawer.Screen name='Edit Profile' component={EditProfileScreen} />
     </HomeDrawer.Navigator> 
   )
 }
