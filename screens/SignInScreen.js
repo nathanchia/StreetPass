@@ -1,13 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { StyleSheet, Button, View, TextInput } from 'react-native';
 
-export default ({navigation}) => {
+import { AuthContext } from '../contexts/AuthContext'
+
+export default ({ navigation }) => {
+  const authFunctions = useContext(AuthContext);
+
   return (
     <View>
         <TextInput placeholder='User Name'/>
         <TextInput placeholder='Password'/>
-
-        <Button title={'Create Account'} onPress={()=> navigation.push('CreateAccount')}/>
+        <Button title={'Sign In'} onPress={()=> {authFunctions.signIn();} }/>
+        <Button title={'Create Account Instead'} onPress={()=>{navigation.push('CreateAccountScreen')}}/>
     </View>
   )
 }

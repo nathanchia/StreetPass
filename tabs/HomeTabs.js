@@ -1,16 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import StreetPassStack from '../stacks/StreetPassStack';
-import FavStack from '../stacks/FavStack';
+import PassStack from '../stacks/PassStack';
+import FavouritesStack from '../stacks/FavouritesStack';
 
 const HomeTabs = createBottomTabNavigator();
 
 export default () => {
   return (
     <HomeTabs.Navigator>
-        <HomeTabs.Screen name='StreetPasses' component = {StreetPassStack} options={{title: 'Street Passes'}}/>
-        <HomeTabs.Screen name='Favourites' component ={FavStack} options={{title: 'Favourites'}}/>
+        <HomeTabs.Screen name='StreetPasses' component = {PassStack} options={{title: 'Street Passes'}}/>
+        <HomeTabs.Screen name='Favourites' component ={FavouritesStack} options={{title: 'Favourites'}}/>
     </HomeTabs.Navigator>
   )
 }

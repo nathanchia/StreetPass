@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import FavScreen from '../screens/FavScreen';
+import FavouritesScreen from '../screens/FavouritesScreen';
 
 const FavStack = createStackNavigator();
 
@@ -11,7 +11,7 @@ export default ({ navigation }) => {
       <FavStack.Navigator>
           <FavStack.Screen 
             name='FavScreen' 
-            component={FavScreen} 
+            component={FavouritesScreen} 
             options={{
               title:'Street Passes',  
               headerTitleAlign :'center', 

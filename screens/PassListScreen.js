@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Button, View, FlatList } from 'react-native';
 
-import PassInfoContext from '../context/PassInfoContext';
+import { PassInfoContext } from '../contexts/PassInfoContext';
 
 
 export default ({ navigation }) => {
@@ -9,7 +9,7 @@ export default ({ navigation }) => {
   
     return (
     <View>
-      <FlatList data={passInfoArray} renderItem={passInfo => <Button title={passInfo.item.name} onPress={()=>{navigation.push('PassInfoScreen', {passInfo: passInfo.item})}}/>} />
+      <FlatList data={passInfoArray} renderItem={passInfo => <Button title={passInfo.item.name} onPress={()=>{navigation.push('PassDisplayScreen', {passInfo: passInfo.item})}}/>} />
     </View>
   )
 }
