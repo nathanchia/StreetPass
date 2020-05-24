@@ -9,7 +9,6 @@ export default (props) => {
     return (
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
-        <DrawerItem label='Edit Profile' onPress={()=>{props.navigation.navigate('EditProfileScreen')}} />
         <DrawerItem label='Sign Out' onPress={()=>{authFunctions.signOut()}}/>
       </DrawerContentScrollView>
     );

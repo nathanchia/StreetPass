@@ -12,7 +12,6 @@ export default () => {
       <RootStack.Navigator >
           <RootStack.Screen name='HomeDrawer' component={HomeDrawer} options={{headerShown: false}}/>
           <RootStack.Screen name='PassDisplayScreen' component={PassDisplayScreen} options={{title: ''}} />
-          <RootStack.Screen name='EditProfileScreen' component={EditProfileScreen} options={{title: 'Edit your Profile'}} />
       </RootStack.Navigator>
   )
 }
