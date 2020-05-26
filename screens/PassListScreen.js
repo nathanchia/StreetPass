@@ -2,18 +2,29 @@ import React, { useContext } from 'react';
 import { StyleSheet, Button, View, FlatList } from 'react-native';
 
 import { PassInfoContext } from '../contexts/PassInfoContext';
+import PassEntry from '../components/PassEntry';
 
 
 export default ({ navigation }) => {
-    const passInfoArray = useContext(PassInfoContext);
+  const passInfoArray = useContext(PassInfoContext);
   
-    return (
-    <View>
-      <FlatList data={passInfoArray} renderItem={passInfo => <Button title={passInfo.item.name} onPress={()=>{navigation.navigate('PassDisplayScreen', {passInfo: passInfo.item})}}/>} />
-    </View>
+  return (
+    <FlatList 
+      contentContainerStyle={styles.listContainer}
+      data={passInfoArray} 
+      renderItem={passInfo => 
+        <PassEntry 
+          title={passInfo.item.name} 
+          onPress={()=>{navigation.navigate('PassDisplayScreen', {passInfo: passInfo.item})}}
+        />
+      } 
+    />
   )
 }
 
 const styles = StyleSheet.create({
- 
+  listContainer : {
+    alignSelf : "center",
+    width: '80%'
+  }
 });

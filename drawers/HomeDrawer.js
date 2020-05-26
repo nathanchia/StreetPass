@@ -11,8 +11,8 @@ const HomeDrawer = createDrawerNavigator();
 export default () => {
   return (
     <HomeDrawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} >
-        <HomeDrawer.Screen name='Home' component={HomeTabs} />
-        <HomeDrawer.Screen name='Edit Profile' component={EditProfileStack} />
+        <HomeDrawer.Screen name='HomeTabs' component={HomeTabs} />
+        <HomeDrawer.Screen name='EditProfileStack' component={EditProfileStack} />
     </HomeDrawer.Navigator> 
   )
 }

@@ -8,7 +8,7 @@ const AuthStack = createStackNavigator();
 
 export default () => {
   return (
-      <AuthStack.Navigator>
+      <AuthStack.Navigator screenOptions={{headerShown: false}}>
           <AuthStack.Screen name='SignInScreen' component={SignInScreen} options={{ title:'Sign In', headerTitleAlign :'center' }} />
           <AuthStack.Screen name='CreateAccountScreen' component={CreateAccountScreen} options={{ title : 'Create Account', headerTitleAlign: 'center' }}/>
       </AuthStack.Navigator>

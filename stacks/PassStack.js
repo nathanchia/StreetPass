@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Enticons from 'react-native-vector-icons/Entypo';
+import * as Styles from '../styles/master';
+
 
 import { PassInfoContext } from '../contexts/PassInfoContext';
 import PassListScreen from '../screens/PassListScreen';
+import PingButton from '../components/PingButton';
 
 const PassStack = createStackNavigator();
 
@@ -11,7 +14,7 @@ export default ({ navigation }) => {
   const[testInfo, setTestInfo] = useState([
     {key: '1', name: 'Amy', hobbies:'Archery'},
     {key: '2', name: 'Bob', hobbies: 'Boxing'},
-    {key: '3', name: 'Clint', hobbies: 'Cooking'}
+    {key: '3', name: 'Clint', hobbies: 'Cooking'},
   ]);
   
   return (
@@ -22,8 +25,15 @@ export default ({ navigation }) => {
           component={PassListScreen} 
           options={{
             title:'Street Passes',  
-            headerTitleAlign :'center', 
-            headerLeft: () => (<Button onPress={() => {navigation.openDrawer()}} title="Info" color="#000000"/>)
+            headerStyle: {
+              ...Styles.backgroundColor,
+            },
+            headerTitleStyle : {
+              ...Styles.fontFamily,
+            },
+            headerTintColor : 'black',
+            headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
+            headerRight: () => (<PingButton onPress={() => {navigation.openDrawer()}} />),
           }} 
         />
       </PassStack.Navigator>
