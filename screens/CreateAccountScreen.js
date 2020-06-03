@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Button, View } from 'react-native';
 
 import { AuthContext } from '../contexts/AuthContext';
@@ -7,13 +7,16 @@ import InfoInput from '../components/InfoInput';
 
 export default () => {
   const authFunctions = useContext(AuthContext);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
 
   return (
     <View style={styles.createAccountContainer}>
-        <InfoInput field='Username' />
-        <InfoInput field='Password' />
-        <InfoInput field='Full Name' />
-        <SubmitButton title='Create Account' onPress={()=>{authFunctions.signUp();}}/>
+        <InfoInput field='Username' onChangeText={setUsername} value={username}/>
+        <InfoInput field='Password' onChangeText={setPassword} value={password}/>
+        <InfoInput field='Display Name' onChangeText={setDisplayName} value={displayName}/>
+        <SubmitButton title='Create Account' onPress={()=>{authFunctions.signUp(username, password);}}/>
     </View>
   )
 }

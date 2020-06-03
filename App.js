@@ -21,18 +21,52 @@ export default function App() {
 
   const authContext = useMemo(() =>{
     return {
-      signIn: () => {
-        setIsLoading(false);
-        setUserToken('asdf');
+      signIn: (username, password) => {
+        fetch('http://10.0.2.2:5000/signin', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          })
+        }).then((response) => response.json())
+          .then((json) => {
+            if (json.token) {
+              setUserToken(json.token);
+            } else {
+              console.log(json.msg);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       },
-      signUp: () => {
-        setIsLoading(false);
-        setUserToken('asdf');
+      signUp: (username, password) => {
+        fetch('http://10.0.2.2:5000/create', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          })
+        }).then((response) => response.json())
+          .then((json) => {
+            console.log(json.msg);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       },
       signOut: () => {
-        setIsLoading(false);
         setUserToken(null);
       },
+      token: userToken
     }
   }, []);
 

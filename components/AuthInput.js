@@ -4,7 +4,12 @@ import * as Styles  from '../styles/master';
 
 const AuthInput = props => {
     return (
-        <TextInput style={{...styles.authInput, ...props.style}} placeholder={props.placeholder}/>
+        <TextInput 
+            style={{...styles.authInput, ...props.style}} 
+            placeholder={props.placeholder}
+            onChangeText={enteredText => props.onChangeText(enteredText)}
+            value={props.value}
+        />
     );
 }
 

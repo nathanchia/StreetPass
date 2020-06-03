@@ -7,7 +7,11 @@ const InfoInput = props => {
     return (
         <View style={styles.infoInputContainer}>
             <Text style={{fontFamily: 'RobotoSlab-Regular'}}>{props.field}</Text>
-            <TextInput style={styles.infoInput} />
+            <TextInput 
+                style={styles.infoInput} 
+                onChangeText={enteredText => props.onChangeText(enteredText)}
+                value={props.value}
+            />
         </View>  
     );
 }

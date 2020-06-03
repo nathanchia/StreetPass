@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import { StyleSheet, Text , View, TouchableOpacity } from 'react-native';
 
 import { AuthContext } from '../contexts/AuthContext';
@@ -8,12 +8,14 @@ import * as Styles from '../styles/master';
 
 export default ({ navigation }) => {
   const authFunctions = useContext(AuthContext);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <View style={styles.signInContainer}>
-        <AuthInput style={styles.removeRoundedBottom} placeholder='User Name'/>
-        <AuthInput style={styles.removeRoundedTop} placeholder='Password'/>
-        <SubmitButton title={'Sign In'} onPress={()=> {authFunctions.signIn();} }/>
+        <AuthInput style={styles.removeRoundedBottom} placeholder='User Name' onChangeText={setUsername} value={username}/>
+        <AuthInput style={styles.removeRoundedTop} placeholder='Password' onChangeText={setPassword} value={password}/>
+        <SubmitButton title={'Sign In'} onPress={()=> {authFunctions.signIn(username, password);} }/>
 
         <TouchableOpacity style={styles.createAccountContainer} onPress={()=>{navigation.push('CreateAccountScreen')}} >
           <Text style={styles.createAccountText}>Create Account Instead</Text>

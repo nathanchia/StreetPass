@@ -1,28 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as Location from 'expo-location';
 import * as Styles from '../styles/master';
 
-
 import { PassInfoContext } from '../contexts/PassInfoContext';
 import PassListScreen from '../screens/PassListScreen';
 import PingButton from '../components/PingButton';
+import { AuthContext } from '../contexts/AuthContext';
 
 const PassStack = createStackNavigator();
 
-const testRequest = () => {
-  return fetch('http://10.0.2.2:5000/ping')
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(json.dev);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-async function testPost() {
+async function testPost(authToken) {
   let { status } = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
     console.log('rejected');
@@ -30,20 +19,21 @@ async function testPost() {
     try {
       let {coords} = await Location.getCurrentPositionAsync({});
       console.log('' + coords.latitude + ', ' + coords.longitude);
+      let auth = 'Bearer ' +  authToken.token;
       fetch('http://10.0.2.2:5000/ping', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: auth,
         },
         body: JSON.stringify({
-          name: 'Nathan',
           latitude: coords.latitude,
           longitude: coords.longitude,
         })
       }).then((response) => response.json())
         .then((json) => {
-          console.log(json.test);
+          console.log(json.msg);
         })
         .catch((error) => {
           console.error(error);
@@ -55,6 +45,7 @@ async function testPost() {
 };
 
 export default ({ navigation }) => {
+  const authToken = useContext(AuthContext);
   const[testInfo, setTestInfo] = useState([
     {key: '1', name: 'Amy', hobbies:'Archery'},
     {key: '2', name: 'Bob', hobbies: 'Boxing'},
@@ -77,7 +68,7 @@ export default ({ navigation }) => {
             },
             headerTintColor : 'black',
             headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-            headerRight: () => (<PingButton onPress={testPost} />),
+            headerRight: () => (<PingButton onPress={() => testPost(authToken)} />),
           }} 
         />
       </PassStack.Navigator>
