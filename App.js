@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from'@react-navigation/drawer';
 import { useFonts } from '@use-expo/font';
+import * as SecureStore from 'expo-secure-store';
 
 import LoadingScreen from './screens/LoadingScreen'
 import AuthStack from './stacks/AuthStack';
 import RootStack from './stacks/RootStack';
 import { AuthContext } from './contexts/AuthContext'
-
-const Drawer = createDrawerNavigator();
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -66,7 +64,9 @@ export default function App() {
       signOut: () => {
         setUserToken(null);
       },
-      token: userToken
+      getUserToken: () => {
+        return userToken;
+      }
     }
   }, []);
 

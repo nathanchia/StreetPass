@@ -19,7 +19,9 @@ async function testPost(authToken) {
     try {
       let {coords} = await Location.getCurrentPositionAsync({});
       console.log('' + coords.latitude + ', ' + coords.longitude);
-      let auth = 'Bearer ' +  authToken.token;
+      
+      let auth = 'Bearer ' + authToken;
+
       fetch('http://10.0.2.2:5000/ping', {
         method: 'POST',
         headers: {
@@ -45,7 +47,7 @@ async function testPost(authToken) {
 };
 
 export default ({ navigation }) => {
-  const authToken = useContext(AuthContext);
+  const authFunctions = useContext(AuthContext);
   const[testInfo, setTestInfo] = useState([
     {key: '1', name: 'Amy', hobbies:'Archery'},
     {key: '2', name: 'Bob', hobbies: 'Boxing'},
@@ -68,7 +70,11 @@ export default ({ navigation }) => {
             },
             headerTintColor : 'black',
             headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-            headerRight: () => (<PingButton onPress={() => testPost(authToken)} />),
+            headerRight: () => (<PingButton onPress={() => { 
+              let tmp = authFunctions.getUserToken();
+              console.log(tmp);
+              testPost(tmp)
+            }}/>),
           }} 
         />
       </PassStack.Navigator>
