@@ -11,7 +11,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const PassStack = createStackNavigator();
 
-async function testPost(authToken) {
+async function testPost(authToken, setTestInfo) {
   let { status } = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
     console.log('rejected');
@@ -35,7 +35,7 @@ async function testPost(authToken) {
         })
       }).then((response) => response.json())
         .then((json) => {
-          console.log(json.msg);
+          setTestInfo(json.msg);
         })
         .catch((error) => {
           console.error(error);
@@ -48,11 +48,7 @@ async function testPost(authToken) {
 
 export default ({ navigation }) => {
   const authFunctions = useContext(AuthContext);
-  const[testInfo, setTestInfo] = useState([
-    {key: '1', name: 'Amy', hobbies:'Archery'},
-    {key: '2', name: 'Bob', hobbies: 'Boxing'},
-    {key: '3', name: 'Clint', hobbies: 'Cooking'},
-  ]);
+  const[testInfo, setTestInfo] = useState([]);
   
   return (
     <PassInfoContext.Provider value={testInfo}>
@@ -70,11 +66,7 @@ export default ({ navigation }) => {
             },
             headerTintColor : 'black',
             headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-            headerRight: () => (<PingButton onPress={() => { 
-              let tmp = authFunctions.getUserToken();
-              console.log(tmp);
-              testPost(tmp)
-            }}/>),
+            headerRight: () => (<PingButton onPress={() => { testPost(authFunctions.getUserToken(), setTestInfo); }}/>),
           }} 
         />
       </PassStack.Navigator>

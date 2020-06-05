@@ -14,7 +14,8 @@ export default ({ navigation }) => {
       data={passInfoArray} 
       renderItem={passInfo => 
         <PassEntry 
-          title={passInfo.item.name} 
+          title={passInfo.item.username} 
+          distance={passInfo.item.distance}
           onPress={()=>{navigation.navigate('PassDisplayScreen', {passInfo: passInfo.item})}}
         />
       } 

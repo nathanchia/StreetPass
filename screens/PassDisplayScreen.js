@@ -1,11 +1,16 @@
-import React from 'react';
+import React , {useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default ({ route }) => {
+  let testpass = null;
+  
+  useEffect(() => {
+  
+  });
+  
   return (
     <View>
-        <Text>{'Name: ' + route.params.passInfo.name}</Text>
-        <Text>{'Hobbies: ' + route.params.passInfo.hobbies}</Text>
+      
     </View>
   )
 }
@@ -13,3 +18,8 @@ export default ({ route }) => {
 const styles = StyleSheet.create({
  
 });
+
+/*
+        <Text>{'Name: ' + route.params.passInfo.name}</Text>
+        <Text>{'Hobbies: ' + route.params.passInfo.hobbies}</Text>
+*/

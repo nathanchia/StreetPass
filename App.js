@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
-import * as SecureStore from 'expo-secure-store';
 
 import LoadingScreen from './screens/LoadingScreen'
 import AuthStack from './stacks/AuthStack';
@@ -14,8 +12,8 @@ export default function App() {
     'RobotoSlab-Regular': require('./assets/fonts/RobotoSlab-Regular.ttf'),
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [userToken, setUserToken] = useState(null);
+  let syncToken = null;
 
   const authContext = useMemo(() =>{
     return {
@@ -33,6 +31,7 @@ export default function App() {
         }).then((response) => response.json())
           .then((json) => {
             if (json.token) {
+              syncToken = json.token;
               setUserToken(json.token);
             } else {
               console.log(json.msg);
@@ -62,23 +61,16 @@ export default function App() {
           });
       },
       signOut: () => {
+        syncToken = null;
         setUserToken(null);
       },
       getUserToken: () => {
-        return userToken;
-      }
+        return syncToken;   
+      },
     }
   }, []);
 
-/*
-  useEffect(()=> {
-    setTimeout(()=>{
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-*/
-
-  if (!fontsLoaded || isLoading) {
+  if (!fontsLoaded) {
     return <LoadingScreen />
   } else {
     return (
@@ -91,6 +83,4 @@ export default function App() {
   }
 }
 
-const styles = StyleSheet.create({
- 
-});
+
