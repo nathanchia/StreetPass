@@ -11,7 +11,7 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const PassStack = createStackNavigator();
 
-async function testPost(authToken, setTestInfo) {
+async function ping(authToken, setTestInfo) {
   let { status } = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
     console.log('rejected');
@@ -48,10 +48,10 @@ async function testPost(authToken, setTestInfo) {
 
 export default ({ navigation }) => {
   const authFunctions = useContext(AuthContext);
-  const[testInfo, setTestInfo] = useState([]);
+  const[passes, setPasses] = useState([]);
   
   return (
-    <PassInfoContext.Provider value={testInfo}>
+    <PassInfoContext.Provider value={passes}>
       <PassStack.Navigator>
         <PassStack.Screen 
           name='PassListScreen' 
@@ -66,7 +66,7 @@ export default ({ navigation }) => {
             },
             headerTintColor : 'black',
             headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-            headerRight: () => (<PingButton onPress={() => { testPost(authFunctions.getUserToken(), setTestInfo); }}/>),
+            headerRight: () => (<PingButton onPress={() => { ping(authFunctions.getUserToken(), setPasses); }}/>),
           }} 
         />
       </PassStack.Navigator>

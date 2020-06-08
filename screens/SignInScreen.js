@@ -10,14 +10,23 @@ export default ({ navigation }) => {
   const authFunctions = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [responseText, setResponseText] = useState('');
 
   return (
     <View style={styles.signInContainer}>
         <AuthInput style={styles.removeRoundedBottom} placeholder='User Name' onChangeText={setUsername} value={username}/>
-        <AuthInput style={styles.removeRoundedTop} placeholder='Password' onChangeText={setPassword} value={password}/>
-        <SubmitButton title={'Sign In'} onPress={()=> {authFunctions.signIn(username, password);} }/>
+        <AuthInput style={styles.removeRoundedTop} placeholder='Password' onChangeText={setPassword} value={password} secure={true}/>
+        
+        <Text style={styles.responseText}>{responseText}</Text>
 
-        <TouchableOpacity style={styles.createAccountContainer} onPress={()=>{navigation.push('CreateAccountScreen')}} >
+        <SubmitButton title={'Sign In'} onPress={()=> {authFunctions.signIn(username, password, setResponseText);}}
+        />
+
+        <TouchableOpacity style={styles.createAccountContainer} onPress={()=>{
+          setResponseText('');
+          navigation.push('CreateAccountScreen');
+          }} 
+        >
           <Text style={styles.createAccountText}>Create Account Instead</Text>
         </TouchableOpacity>
     </View>
@@ -40,6 +49,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius : 0,
     marginBottom: 10,
   }, 
+  responseText : {
+    ...Styles.fontFamily,
+    marginBottom: 10,
+    fontSize : 11,
+    color: 'red'
+  },
   createAccountContainer : {
     marginTop : 15,
   }, 

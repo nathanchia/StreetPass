@@ -17,48 +17,69 @@ export default function App() {
 
   const authContext = useMemo(() =>{
     return {
-      signIn: (username, password) => {
-        fetch('http://10.0.2.2:5000/signin', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          })
-        }).then((response) => response.json())
-          .then((json) => {
-            if (json.token) {
-              syncToken = json.token;
-              setUserToken(json.token);
+      signIn: (username, password, setResponseText) => {
+        if (username && password) {
+          fetch('http://10.0.2.2:5000/signin', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username: username,
+              password: password, 
+            })
+          }).then((response) => {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+              return response.json().then(json => {
+                if (response.status === 200) {
+                  syncToken = json.token;
+                  setUserToken(json.token);
+                } else {
+                  setResponseText(json.msg);
+                }
+              });
             } else {
-              console.log(json.msg);
+              setResponseText('Unexpected error occured');
             }
-          })
-          .catch((error) => {
-            console.error(error);
+          }).catch((error) => {
+              setResponseText(error);
           });
+        }
       },
-      signUp: (username, password) => {
-        fetch('http://10.0.2.2:5000/create', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          })
-        }).then((response) => response.json())
-          .then((json) => {
-            console.log(json.msg);
-          })
-          .catch((error) => {
-            console.error(error);
+      signUp: (username, password, displayName, navigation, setResponseText) => {
+        if (username && password && displayName) {
+          fetch('http://10.0.2.2:5000/create', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username: username,
+              password: password,
+            })
+          }).then((response) => {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+              return response.json().then(json => {
+                if (response.status === 200) {
+                  navigation.replace('ReturnSignInScreen');
+                } else {
+                  setResponseText(json.msg);
+                }
+              });
+            } else {
+              setResponseText('Unexpected error occured');
+            }
+          }).catch((error) => {
+              setResponseText(error);
           });
+        } else {
+          setResponseText('Please fill out all fields');
+        }
+        
       },
       signOut: () => {
         syncToken = null;
@@ -82,5 +103,6 @@ export default function App() {
     )
   }
 }
+
 
 

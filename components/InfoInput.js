@@ -11,6 +11,7 @@ const InfoInput = props => {
                 style={styles.infoInput} 
                 onChangeText={enteredText => props.onChangeText(enteredText)}
                 value={props.value}
+                secureTextEntry={props.secure}
             />
         </View>  
     );
