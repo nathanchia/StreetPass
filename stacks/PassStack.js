@@ -1,57 +1,75 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as Location from 'expo-location';
 import * as Styles from '../styles/master';
+import { AsyncStorage } from 'react-native';
 
 import { PassInfoContext } from '../contexts/PassInfoContext';
 import PassListScreen from '../screens/PassListScreen';
 import PingButton from '../components/PingButton';
-import { AuthContext } from '../contexts/AuthContext';
 
 const PassStack = createStackNavigator();
 
-async function ping(authToken, setTestInfo) {
+async function ping(setPasses, setResponseText) {
   let { status } = await Location.requestPermissionsAsync();
   if (status !== 'granted') {
-    console.log('rejected');
+    setResponseText('Needs permission to ping for passes');
   } else {
+    setPasses([]);
     try {
       let {coords} = await Location.getCurrentPositionAsync({});
-      console.log('' + coords.latitude + ', ' + coords.longitude);
       
-      let auth = 'Bearer ' + authToken;
-
-      fetch('http://10.0.2.2:5000/ping', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: auth,
-        },
-        body: JSON.stringify({
-          latitude: coords.latitude,
-          longitude: coords.longitude,
-        })
-      }).then((response) => response.json())
-        .then((json) => {
-          setTestInfo(json.msg);
-        })
-        .catch((error) => {
-          console.error(error);
+      AsyncStorage.getItem('userInfo').then((user) => {
+        let auth = 'Bearer ' + JSON.parse(user).token;
+        fetch('http://10.0.2.2:5000/ping', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: auth,
+          },
+          body: JSON.stringify({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          })
+        }).then((response) => {
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json().then(json => {
+              if (response.status === 200) {
+                if(json.msg.length > 0){
+                  setPasses(json.msg);
+                } else {
+                  setResponseText('No passes found near you\nTry again later');
+                }
+              }
+            });
+          } else {
+            // Not JSON, most likely server error
+            setResponseText('Unexpected error occured');
+          }
+        }).catch((error) => {
+            // fetch error
+            setResponseText(error);
         });
-    } catch (e) {
-      console.log(e);
+      }).catch((error) => {
+        // Get userinfo storage error
+        setResponseText(error);
+      });
+    } catch (error) {
+      // Get position error
+      setResponseText('' + error);
     }
   } 
 };
 
 export default ({ navigation }) => {
-  const authFunctions = useContext(AuthContext);
   const[passes, setPasses] = useState([]);
+  const[responseText, setResponseText] = useState('Ping to find passes');
   
   return (
-    <PassInfoContext.Provider value={passes}>
+    <PassInfoContext.Provider value={{passes: passes, responseText: responseText}}>
       <PassStack.Navigator>
         <PassStack.Screen 
           name='PassListScreen' 
@@ -66,7 +84,7 @@ export default ({ navigation }) => {
             },
             headerTintColor : 'black',
             headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-            headerRight: () => (<PingButton onPress={() => { ping(authFunctions.getUserToken(), setPasses); }}/>),
+            headerRight: () => (<PingButton onPress={() => { ping(setPasses, setResponseText); }}/>),
           }} 
         />
       </PassStack.Navigator>

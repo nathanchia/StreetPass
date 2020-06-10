@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
         ...Styles.fontFamily,
         ...Styles.bottomBorder,
         fontSize: 17,
-        
     }
 })
 

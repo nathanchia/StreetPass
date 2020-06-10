@@ -14,7 +14,7 @@ export default ({ navigation }) => {
 
   return (
     <View style={styles.signInContainer}>
-        <AuthInput style={styles.removeRoundedBottom} placeholder='User Name' onChangeText={setUsername} value={username}/>
+        <AuthInput style={styles.removeRoundedBottom} placeholder='Username' onChangeText={setUsername} value={username}/>
         <AuthInput style={styles.removeRoundedTop} placeholder='Password' onChangeText={setPassword} value={password} secure={true}/>
         
         <Text style={styles.responseText}>{responseText}</Text>
@@ -23,6 +23,8 @@ export default ({ navigation }) => {
         />
 
         <TouchableOpacity style={styles.createAccountContainer} onPress={()=>{
+          setUsername('');
+          setPassword('');
           setResponseText('');
           navigation.push('CreateAccountScreen');
           }} 

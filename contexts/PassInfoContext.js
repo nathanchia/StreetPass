@@ -1,4 +1,4 @@
 import React from 'react';
 
-export const PassInfoContext = React.createContext([]);
+export const PassInfoContext = React.createContext();
 

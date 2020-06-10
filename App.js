@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { AsyncStorage } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 
@@ -8,12 +9,12 @@ import RootStack from './stacks/RootStack';
 import { AuthContext } from './contexts/AuthContext'
 
 export default function App() {
+  // Returns true only when fonts are loaded
   let [fontsLoaded] = useFonts({
     'RobotoSlab-Regular': require('./assets/fonts/RobotoSlab-Regular.ttf'),
   });
 
   const [userToken, setUserToken] = useState(null);
-  let syncToken = null;
 
   const authContext = useMemo(() =>{
     return {
@@ -34,17 +35,29 @@ export default function App() {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  syncToken = json.token;
-                  setUserToken(json.token);
+                  // Get all user info to setup app
+                  let user = {
+                    token: json.token,
+                    displayName: json.displayName,
+                  };
+                  AsyncStorage.setItem('userInfo', JSON.stringify(user)).then((error) => {
+                    if (error) {
+                      setResponseText('' + error);
+                    } else {
+                      setUserToken(json.token);
+                    }
+                  });            
                 } else {
+                  // Invalid credentials
                   setResponseText(json.msg);
                 }
               });
             } else {
+              // Not JSON, most likely server error
               setResponseText('Unexpected error occured');
             }
           }).catch((error) => {
-              setResponseText(error);
+              setResponseText('' + error);
           });
         }
       },
@@ -59,6 +72,7 @@ export default function App() {
             body: JSON.stringify({
               username: username,
               password: password,
+              displayName: displayName,
             })
           }).then((response) => {
             const contentType = response.headers.get("content-type");
@@ -67,26 +81,30 @@ export default function App() {
                 if (response.status === 200) {
                   navigation.replace('ReturnSignInScreen');
                 } else {
+                  // User already exists
                   setResponseText(json.msg);
                 }
               });
             } else {
+              // Not JSON, most likely server error
               setResponseText('Unexpected error occured');
             }
           }).catch((error) => {
-              setResponseText(error);
+              setResponseText('' + error);
           });
         } else {
           setResponseText('Please fill out all fields');
         }
-        
       },
       signOut: () => {
-        syncToken = null;
-        setUserToken(null);
-      },
-      getUserToken: () => {
-        return syncToken;   
+        // Delete cached user info
+        AsyncStorage.setItem('userInfo', '').then((error) => {
+          if (error) {
+            setResponseText('' + error);
+          } else {
+            setUserToken(null);
+          }
+        });     
       },
     }
   }, []);
