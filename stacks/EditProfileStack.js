@@ -23,7 +23,6 @@ export default ({navigation}) => {
               },
               headerTintColor : 'black',
               headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
-              headerRight: () => (<Enticons style={{marginRight : 10}} name={'check'} size={30} onPress={() => {navigation.openDrawer()}}/>),
             }} 
           />
       </EditProfileStack.Navigator>

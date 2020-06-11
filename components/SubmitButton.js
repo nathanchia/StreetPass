@@ -4,7 +4,7 @@ import * as Styles  from '../styles/master';
 
 const SubmitButton = props => {
     return (
-        <TouchableHighlight style={styles.buttonContainer} onPress={props.onPress}>
+        <TouchableHighlight style={{...styles.buttonContainer, ...props.containerStyle}} onPress={props.onPress}>
             <Text style={styles.buttonText}>{props.title}</Text>
         </TouchableHighlight>
     );
