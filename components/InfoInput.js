@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 import * as Styles from '../styles/master';
 
+// Used for user input, at create new account and new edit entry
 const InfoInput = props => {
     const [inputHeight, setInputHeight] = useState(0);
 

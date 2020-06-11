@@ -2,6 +2,8 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import * as Styles  from '../styles/master';
 
+// Displays a pass in home tabs and favourite tabs
+// Includes display name distance from user
 const PassEntry = props => {
     return (
         <TouchableOpacity activeOpacity={0.6} style={styles.entryContainer} onPress={props.onPress}>

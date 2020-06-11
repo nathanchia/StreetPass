@@ -4,6 +4,8 @@ import Enticons from 'react-native-vector-icons/Entypo';
 
 import * as Styles from '../styles/master';
 
+// An entry in the edit screen, displays title and text, as well as provides
+// delete and edit functionality
 const EditEntry = props => {
     return (
         <View style={styles.entryContainer}>

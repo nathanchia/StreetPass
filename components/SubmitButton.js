@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableHighlight, StyleSheet } from 'react-native';
 import * as Styles  from '../styles/master';
 
+// Button for form submissions
 const SubmitButton = props => {
     return (
         <TouchableHighlight style={{...styles.buttonContainer, ...props.containerStyle}} onPress={props.onPress}>

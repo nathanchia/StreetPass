@@ -14,12 +14,8 @@ export default ({navigation}) => {
   const screenHeight = Math.round(Dimensions.get('window').height);
 
   const [displayName, setDisplayName] = useState('');
+  const [passEntries, setPassEntries] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  // Data gotten from storage with key, title, and text fields
-  const [passEntries, setPassEntries] = useState([
-    {title:'Likes', text:'Boxing'}, 
-    {title:'Dislikes', text:'Bugs'},
-  ]);
   const [newTitle, setNewTitle] = useState('');
   const [newValue , setNewValue] = useState('');
 
@@ -78,8 +74,9 @@ export default ({navigation}) => {
             containerStyle={styles.saveButton} 
             title={'Save Changes'}
             onPress={() => {
+              let newKey = new Date().getTime() + newTitle;
               setPassEntries(currentEntries => [...currentEntries, 
-                {title: newTitle, text: newValue}
+                {key: newKey ,title: newTitle, text: newValue}
               ]);
               setNewTitle('');
               setNewValue('');
@@ -99,7 +96,7 @@ export default ({navigation}) => {
 
 const styles = StyleSheet.create({
   editContainer : {
-    paddingTop : '10%',
+    paddingTop : '5%',
     height: '100%',
   }, 
   modalContainer : {

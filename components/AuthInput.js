@@ -2,6 +2,7 @@ import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 import * as Styles  from '../styles/master';
 
+// Login fields (username and password)
 const AuthInput = props => {
     return (
         <TextInput 
