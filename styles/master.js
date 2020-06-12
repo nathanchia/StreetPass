@@ -23,3 +23,6 @@ export const bottomBorder = {
 export const fontFamily = {
     fontFamily: 'RobotoSlab-Regular',
 }
+
+
+
