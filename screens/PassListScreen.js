@@ -5,13 +5,21 @@ import * as Location from 'expo-location';
 
 import PassEntry from '../components/PassEntry';
 import PingButton from '../components/PingButton';
-import * as Styles from '../styles/master';
+import SmallModal from '../components/smallModal';
 
 export default ({ navigation }) => {
   const[passes, setPasses] = useState([]);
-  const[responseText, setResponseText] = useState('Ping to find passes');
+  const[responseVisible, setResponseVisible] = useState(false);
+  const[responseTitle, setResponseTitle] = useState('');
+  const[responseText, setResponseText] = useState('');
 
-  // Ping functiom
+  const showResponse = (title, text) => {
+    setResponseTitle(title);
+    setResponseText('' + text);
+    setResponseVisible(true);
+  }
+
+  // Ping function
   async function ping() {
     let { status } = await Location.requestPermissionsAsync();
     if (status !== 'granted') {
@@ -20,7 +28,11 @@ export default ({ navigation }) => {
       setPasses([]);
       try {
         let {coords} = await Location.getCurrentPositionAsync({});
-        
+        /*
+        Location.reverseGeocodeAsync(coords).then((geocode) => {
+          console.log(geocode);
+        });
+        */
         SecureStore.getItemAsync('token').then((token) => {
           let auth = 'Bearer ' + token;
           fetch('http://10.0.2.2:5000/ping', {
@@ -39,28 +51,34 @@ export default ({ navigation }) => {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  if(json.passes.length > 0){
+                  let numPasses = json.passes.length;
+                  if (numPasses > 0) {
+                    if (numPasses > 1) {
+                      showResponse('Found ' + json,passes.length + ' passes!', 'Congrats');
+                    } else {
+                      showResponse('Found 1 pass!', 'Congrats');
+                    }
                     setPasses(json.passes);
                   } else {
-                    setResponseText('No passes found near you\nTry again later');
+                    showResponse('Found 0 passes', 'No one\'s near you.\nTry again later');
                   }
                 }
               });
             } else {
               // Not JSON, most likely server error
-              setResponseText('Unexpected error occured');
+              showResponse('Error', 'Unexpected error occured');
             }
           }).catch((error) => {
               // fetch error
-              setResponseText(error);
+              showResponse('Error', error);
           });
         }).catch((error) => {
           // Get userinfo storage error
-          setResponseText(error);
+          showResponse('Error', error);
         });
       } catch (error) {
         // Get position error
-        setResponseText('' + error);
+        showResponse('Error', error);
       }
     } 
   };
@@ -72,9 +90,18 @@ export default ({ navigation }) => {
     });
   }, [navigation]);
 
-  // Display Passes
-  if (passes.length > 0) {
-    return (
+  
+  return (
+    <View>
+      <SmallModal 
+        visible={responseVisible}
+        title={responseTitle}
+        text={responseText}
+        okCallback={()=>{
+          setResponseVisible(false);
+        }}
+      />
+      
       <FlatList 
         contentContainerStyle={styles.listContainer}
         data={passes} 
@@ -86,27 +113,14 @@ export default ({ navigation }) => {
           />
         } 
       />
-    )
-  } else {  // Either no passes or error
-    return (
-      <View style={styles.responseContainer}>
-        <Text style={styles.responseText}>{responseText}</Text>
-      </View>
-    )
-  }
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
   listContainer : {
     alignSelf : "center",
-    width: '80%'
-  }, responseContainer : {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  }, responseText : {
-    ...Styles.fontFamily,
-    textAlign: 'center',
-    fontSize : 11,
+    width: '80%', 
+    marginTop: '3%',
   },
 });

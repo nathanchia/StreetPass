@@ -5,11 +5,20 @@ import * as SecureStore from 'expo-secure-store';
 
 import EditEntry from '../components/EditEntry';
 import FullModal from '../components/FullModal';
+import SmallModal from '../components/SmallModal';
 
 export default ({navigation}) => {
   const [displayName, setDisplayName] = useState('');
   const [passEntries, setPassEntries] = useState([]);
   const [createVisible, setCreateVisible] = useState(false);
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Sets error modal to visible and assigns error msg
+  const reportError = (error) => {
+    setErrorMsg('' + error);
+    setErrorVisible(true);
+  }
 
   // Loads user information from server when first mounted
   useEffect(() => {
@@ -33,19 +42,19 @@ export default ({navigation}) => {
             }
           });
         } else {
-          setDisplayName('Unexpected error occured');
+          reportError('Unexpected error occured');
         }
       }).catch((error) => {
         // Fetch Error
-        setDisplayName(''+ error);
+        reportError(''+ error);
       });
     }).catch((error) => {
       // SecureStorage error
-      setDisplayName('' + error);
+      reportError('' + error);
     });
   }, []);
 
-  // Displays modal
+  // Displays create new entry modal
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (<Enticons 
@@ -57,9 +66,9 @@ export default ({navigation}) => {
     });
   }, [navigation]);
 
-  const updateDisplayName = (newDisplayName) => {
+  // Skeleton code for post requests to server
+  const postRequest = (url, body, callbackFunc) => {
     SecureStore.getItemAsync('token').then((token) => {
-      let url = 'http://10.0.2.2:5000/changename'
       let auth = 'Bearer ' + token;
       fetch(url, {
         method: 'POST',
@@ -68,46 +77,61 @@ export default ({navigation}) => {
           'Content-Type': 'application/json',
           Authorization: auth,
         },
-        body: JSON.stringify({
-          newName: newDisplayName,
-        })
+        body: JSON.stringify(body)
       }).then((response) => {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
           return response.json().then(json => {
             if (response.status === 200) {
-              setDisplayName(newDisplayName);
+              callbackFunc();
             }
           });
         } else {
-          setDisplayName('Unexpected error occured');
+          reportError('Unexpected error occured');
         }
       }).catch((error) => {
         // Fetch Error
-        setDisplayName(''+ error);
+        reportError(''+ error);
       });
     }).catch((error) => {
       // SecureStorage error
-      setDisplayName('' + error);
+      reportError('' + error);
     });
+  };
+
+  const updateDisplayName = (newDisplayName) => {
+    postRequest('http://10.0.2.2:5000/changename', {newName: newDisplayName}, () => {
+      setDisplayName(newDisplayName);
+    })
   }
 
   const newEntry = (newTitle, newValue) => {
     let newKey = new Date().getTime() + newTitle;
-    setPassEntries(currentEntries => [...currentEntries, {key: newKey ,title: newTitle, text: newValue}]);
-  }
+    let newEntries = [...passEntries, {key: newKey ,title: newTitle, text: newValue}];
+
+    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+      setPassEntries(newEntries);
+    })
+  };
 
   const updateEntry = (newTitle, newText, targetKey) => {
     let index = passEntries.findIndex(entry => entry.key === targetKey);
-    setPassEntries(currentEntries => [
-        ...currentEntries.slice(0, index),
-        {key: targetKey, title: newTitle, text: newText},
-        ...currentEntries.slice(index + 1)
-    ]);
+    let newEntries =  [
+      ...passEntries.slice(0, index),
+      {key: targetKey, title: newTitle, text: newText},
+      ...passEntries.slice(index + 1)
+    ];
+
+    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+      setPassEntries(newEntries);
+    })
   };
 
   const removeEntry = (targetKey) => {
-    setPassEntries(currentEntries => currentEntries.filter((entry) => entry.key !== targetKey));
+    let newEntries = passEntries.filter((entry) => entry.key !== targetKey);
+    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+      setPassEntries(newEntries);
+    })
   };
 
   return (
@@ -117,6 +141,15 @@ export default ({navigation}) => {
         setModalVisible={setCreateVisible} 
         headerTitle={'Create New Entry'}
         submitFunction={newEntry} 
+      />
+
+      <SmallModal
+        visible={errorVisible}
+        title={'Error'}
+        text={errorMsg}
+        okCallback={()=> {
+          setErrorVisible(false);
+        }}
       />
 
       <ScrollView>
