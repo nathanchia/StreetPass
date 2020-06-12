@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     ...Styles.fontFamily,
     marginBottom: 10,
     fontSize : 11,
-    color: 'red'
+    color: 'red',
+    alignSelf: 'center',
   },
   createAccountContainer : {
     marginTop : 15,

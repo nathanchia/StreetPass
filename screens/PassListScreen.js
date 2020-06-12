@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import { AsyncStorage } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
 import PassEntry from '../components/PassEntry';
@@ -21,8 +21,8 @@ export default ({ navigation }) => {
       try {
         let {coords} = await Location.getCurrentPositionAsync({});
         
-        AsyncStorage.getItem('userInfo').then((user) => {
-          let auth = 'Bearer ' + JSON.parse(user).token;
+        SecureStore.getItemAsync('token').then((token) => {
+          let auth = 'Bearer ' + token;
           fetch('http://10.0.2.2:5000/ping', {
             method: 'POST',
             headers: {
@@ -39,8 +39,8 @@ export default ({ navigation }) => {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  if(json.msg.length > 0){
-                    setPasses(json.msg);
+                  if(json.passes.length > 0){
+                    setPasses(json.passes);
                   } else {
                     setResponseText('No passes found near you\nTry again later');
                   }

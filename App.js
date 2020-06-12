@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { AsyncStorage } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 
@@ -35,12 +35,7 @@ export default function App() {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  // Get all user info to setup app
-                  let user = {
-                    token: json.token,
-                    displayName: json.displayName,
-                  };
-                  AsyncStorage.setItem('userInfo', JSON.stringify(user)).then((error) => {
+                  SecureStore.setItemAsync('token', json.token).then((error) => {
                     if (error) {
                       setResponseText('' + error);
                     } else {
@@ -98,7 +93,7 @@ export default function App() {
       },
       signOut: () => {
         // Delete cached user info
-        AsyncStorage.setItem('userInfo', '').then((error) => {
+        SecureStore.setItemAsync('token', '').then((error) => {
           if (error) {
             setResponseText('' + error);
           } else {

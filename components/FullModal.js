@@ -9,7 +9,7 @@ import SubmitButton from '../components/SubmitButton';
 
 // Non transparent modal used in edit 
 // Required props: visible, setModalVisible, headerTitle, submitFunction, 
-// Optional props: onShow, entryKey 
+// Optional props: onShow, entryKey, partial 
 const FullModal = props => {
     const [newTitle, setNewTitle] = useState('');
     const [newValue , setNewValue] = useState('');
@@ -18,7 +18,7 @@ const FullModal = props => {
 
     // Only allow title editing if not display name
     let titleInput;
-    if (props.entryKey) {
+    if (!props.partial) {
         titleInput =
             <InfoInput 
                 containerStyle={{width: '100%'}} 
@@ -30,7 +30,7 @@ const FullModal = props => {
 
     // Hide 'text' header if only editing display name
     let textInput;
-    if (props.entryKey) {
+    if (!props.partial) {
         textInput =
             <InfoInput 
                 containerStyle={{width: '100%'}} 
@@ -81,7 +81,7 @@ const FullModal = props => {
                     containerStyle={styles.saveButton} 
                     title={'Save Changes'}
                     onPress={() => {
-                        if (props.entryKey) {
+                        if (!props.partial) {
                             if (newTitle && newValue) {
                                 props.submitFunction(newTitle, newValue, props.entryKey);
                                 setNewTitle('');

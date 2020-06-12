@@ -13,7 +13,7 @@ const EditEntry = props => {
 
     let editModal;
     // Full modal with title and text fields
-    if (props.deletable) {
+    if (!props.partial) {
         editModal = 
             <FullModal 
                 visible={editVisible} 
@@ -29,6 +29,7 @@ const EditEntry = props => {
     } else {  // Only edit display name
         editModal = 
             <FullModal 
+                partial={true}
                 visible={editVisible} 
                 setModalVisible={setEditVisible} 
                 headerTitle={'Change Display Name'} 
@@ -90,7 +91,6 @@ const styles = StyleSheet.create({
     }, 
     entryHeader : {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 20,
         flex: 1,   
@@ -140,41 +140,3 @@ const styles = StyleSheet.create({
 })
 
 export default EditEntry;
-
-/*
-            <Modal animationType={'slide'} visible={editVisible} >
-                <View style={{...styles.editContainer, height: screenHeight}}>
-                    <View style={styles.editHeader}>
-                        <Text style={styles.editTitle}>{props.title}</Text>
-                        <Enticons name={'cross'} size={30} onPress={() => {
-                            setValidEntry('');
-                            setEditVisible(false);
-                        }} />
-                    </View>  
-
-                    <InfoInput 
-                        containerStyle={{width: '100%'}} 
-                        value={editText} 
-                        onChangeText={setEditText}
-                        multi={true}
-                    />
-
-                    <Text style={styles.validEntry}>{validEntry}</Text>
-
-                    <SubmitButton 
-                        containerStyle={styles.saveButton} 
-                        title={'Save Changes'}
-                        onPress={() => {
-                            if (editText) {
-                                props.onUpdate(editText, props.entryKey, props.title);
-                                setValidEntry('');
-                                setEditVisible(false);
-                            } else {
-                                setValidEntry('Cannot be empty');
-                            }
-                        }}
-                    />
-                </View>
-            </Modal>
-
-*/

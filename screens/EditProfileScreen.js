@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native'
-import { AsyncStorage } from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
+import * as SecureStore from 'expo-secure-store';
 
 import EditEntry from '../components/EditEntry';
 import FullModal from '../components/FullModal';
@@ -12,16 +11,39 @@ export default ({navigation}) => {
   const [passEntries, setPassEntries] = useState([]);
   const [createVisible, setCreateVisible] = useState(false);
 
-  // Returns true when first navigated to this screen
-  const isFocused = useIsFocused();
-
-  // Loads user information when first navigated
+  // Loads user information from server when first mounted
   useEffect(() => {
-    AsyncStorage.getItem('userInfo').then((user) => {
-      let data = JSON.parse(user);
-      setDisplayName(data.displayName);   
+    SecureStore.getItemAsync('token').then((token) => {
+      let url = 'http://10.0.2.2:5000/getpass?userid=self'
+      let auth = 'Bearer ' + token;
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: auth,
+        }
+      }).then((response) => {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json().then(json => {
+            if (response.status === 200) {
+              setDisplayName(json.displayName);
+              let entriesArray = JSON.parse(json.entries);
+              setPassEntries(entriesArray);
+            }
+          });
+        } else {
+          setDisplayName('Unexpected error occured');
+        }
+      }).catch((error) => {
+        // Fetch Error
+        setDisplayName(''+ error);
+      });
+    }).catch((error) => {
+      // SecureStorage error
+      setDisplayName('' + error);
     });
-  }, [isFocused]);
+  }, []);
 
   // Displays modal
   React.useLayoutEffect(() => {
@@ -67,7 +89,7 @@ export default ({navigation}) => {
       />
 
       <ScrollView>
-        <EditEntry onUpdate={updateDisplayName} title={'Display name'} text={displayName}/>
+        <EditEntry partial={true} onUpdate={updateDisplayName} title={'Display name'} text={displayName}/>
         {passEntries.map((entry) => 
           <EditEntry 
             deletable={true} 
