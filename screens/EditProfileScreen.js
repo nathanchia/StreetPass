@@ -58,7 +58,38 @@ export default ({navigation}) => {
   }, [navigation]);
 
   const updateDisplayName = (newDisplayName) => {
-    setDisplayName(newDisplayName);
+    SecureStore.getItemAsync('token').then((token) => {
+      let url = 'http://10.0.2.2:5000/changename'
+      let auth = 'Bearer ' + token;
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: auth,
+        },
+        body: JSON.stringify({
+          newName: newDisplayName,
+        })
+      }).then((response) => {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json().then(json => {
+            if (response.status === 200) {
+              setDisplayName(newDisplayName);
+            }
+          });
+        } else {
+          setDisplayName('Unexpected error occured');
+        }
+      }).catch((error) => {
+        // Fetch Error
+        setDisplayName(''+ error);
+      });
+    }).catch((error) => {
+      // SecureStorage error
+      setDisplayName('' + error);
+    });
   }
 
   const newEntry = (newTitle, newValue) => {
