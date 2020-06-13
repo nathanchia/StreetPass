@@ -22,36 +22,14 @@ export default ({navigation}) => {
 
   // Loads user information from server when first mounted
   useEffect(() => {
-    SecureStore.getItemAsync('token').then((token) => {
-      let url = 'http://10.0.2.2:5000/getpass?userid=self'
-      let auth = 'Bearer ' + token;
-      fetch(url, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: auth,
-        }
-      }).then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json().then(json => {
-            if (response.status === 200) {
-              setDisplayName(json.displayName);
-              let entriesArray = JSON.parse(json.entries);
-              setPassEntries(entriesArray);
-            }
-          });
-        } else {
-          reportError('Unexpected error occured');
-        }
-      }).catch((error) => {
-        // Fetch Error
-        reportError(''+ error);
-      });
-    }).catch((error) => {
-      // SecureStorage error
+    SecureStore.getItemAsync('user').then((user) => {
+      let json = JSON.parse(user);
+      setDisplayName(json.displayName);
+      let entriesArray = JSON.parse(json.entries);
+      setPassEntries(entriesArray);
+    }).catch((error)=> {
       reportError('' + error);
-    });
+    })
   }, []);
 
   // Displays create new entry modal
@@ -68,8 +46,9 @@ export default ({navigation}) => {
 
   // Skeleton code for post requests to server
   const postRequest = (url, body, callbackFunc) => {
-    SecureStore.getItemAsync('token').then((token) => {
-      let auth = 'Bearer ' + token;
+    SecureStore.getItemAsync('user').then((user) => {
+      let json = JSON.parse(user);
+      let auth = 'Bearer ' + json.token;
       fetch(url, {
         method: 'POST',
         headers: {
@@ -100,7 +79,7 @@ export default ({navigation}) => {
   };
 
   const updateDisplayName = (newDisplayName) => {
-    postRequest('http://10.0.2.2:5000/changename', {newName: newDisplayName}, () => {
+    postRequest('https://nkchia.pythonanywhere.com/changename', {newName: newDisplayName}, () => {
       setDisplayName(newDisplayName);
     })
   }
@@ -109,7 +88,7 @@ export default ({navigation}) => {
     let newKey = new Date().getTime() + newTitle;
     let newEntries = [...passEntries, {key: newKey ,title: newTitle, text: newValue}];
 
-    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
       setPassEntries(newEntries);
     })
   };
@@ -122,14 +101,14 @@ export default ({navigation}) => {
       ...passEntries.slice(index + 1)
     ];
 
-    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
       setPassEntries(newEntries);
     })
   };
 
   const removeEntry = (targetKey) => {
     let newEntries = passEntries.filter((entry) => entry.key !== targetKey);
-    postRequest('http://10.0.2.2:5000/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
+    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
       setPassEntries(newEntries);
     })
   };
@@ -153,7 +132,7 @@ export default ({navigation}) => {
       />
 
       <ScrollView>
-        <EditEntry partial={true} onUpdate={updateDisplayName} title={'Display name'} text={displayName}/>
+        <EditEntry key={'displayName'} partial={true} onUpdate={updateDisplayName} title={'Display name'} text={displayName}/>
         {passEntries.map((entry) => 
           <EditEntry 
             deletable={true} 
@@ -161,6 +140,7 @@ export default ({navigation}) => {
             onUpdate={updateEntry}
             title={entry.title} 
             text={entry.text} 
+            key={entry.key}
             entryKey={entry.key}
           />
         )}

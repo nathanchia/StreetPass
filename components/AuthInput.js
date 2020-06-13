@@ -8,6 +8,7 @@ const AuthInput = props => {
         <TextInput 
             style={{...styles.authInput, ...props.style}} 
             placeholder={props.placeholder}
+            autoCapitalize={'none'}
             onChangeText={enteredText => props.onChangeText(enteredText)}
             value={props.value}
             secureTextEntry={props.secure}

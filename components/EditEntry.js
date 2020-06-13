@@ -6,7 +6,8 @@ import * as Styles from '../styles/master';
 import FullModal from './FullModal';
 import SmallModal from './SmallModal';
 
-// An entry in the edit screen, displays title and text, as well as provides delete and edit functionality
+// Required props: onUpdate, title, text
+// Optional props: partial, deletable, onDelete, entryKey
 const EditEntry = props => {
     const [deleteVisible, setDeleteVisible] = useState(false);
     const [editVisible, setEditVisible] = useState(false);
@@ -83,20 +84,17 @@ const EditEntry = props => {
 
 const styles = StyleSheet.create({
     entryContainer : {
-        width: '80%',
-        marginBottom : 30,
-        alignSelf: 'center',
+        ...Styles.entryContainer,
     }, 
     entryHeader : {
+        ...Styles.entryTitleBottomMargin,
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
         flex: 1,   
     },
     entryTitle : {
         ...Styles.fontFamily,
-        textDecorationLine: 'underline',
-        fontSize: 20,
+        ...Styles.entryTitle,
         flex: 10,
     },
     entryHeaderIconLeft : {

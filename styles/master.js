@@ -24,5 +24,19 @@ export const fontFamily = {
     fontFamily: 'RobotoSlab-Regular',
 }
 
+// For pass info entries and edit entries
+export const entryContainer = {
+    width: '80%',
+    marginBottom : 30,
+    alignSelf: 'center',
+}
 
+export const entryTitleBottomMargin = {
+    marginBottom : 5,
+}
+
+export const entryTitle = {
+    textDecorationLine: 'underline',
+    fontSize: 20,
+}
 

@@ -15,8 +15,8 @@ export default ({navigation}) => {
 
   return (
     <View style={styles.createAccountContainer}>
-        <InfoInput field='Username' onChangeText={setUsername} value={username}/>
-        <InfoInput field='Password' onChangeText={setPassword} value={password} secure={true}/>
+        <InfoInput autoCapitalize={'none'} field='Username' onChangeText={setUsername} value={username}/>
+        <InfoInput  autoCapitalize={'none'} field='Password' onChangeText={setPassword} value={password} secure={true}/>
         <InfoInput field='Display Name' onChangeText={setDisplayName} value={displayName}/>
         <Text style={styles.responseText}>{responseText}</Text>
         <SubmitButton title='Create Account' onPress={()=>{authFunctions.signUp(username, password, displayName, navigation, setResponseText);}}/>

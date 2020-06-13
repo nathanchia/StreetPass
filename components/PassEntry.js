@@ -8,7 +8,7 @@ const PassEntry = props => {
     return (
         <TouchableOpacity activeOpacity={0.6} style={styles.entryContainer} onPress={props.onPress}>
             <Text style={styles.entryText}>{props.title}</Text>
-            <Text style={styles.entryText}>{props.distance + ' miles'}</Text>
+            <Text style={styles.entryText}>{props.distance + ' meters'}</Text>
         </TouchableOpacity>
     );
 }

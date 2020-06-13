@@ -14,6 +14,7 @@ const InfoInput = props => {
                 style={styles.infoInput}
                 onChangeText={enteredText => props.onChangeText(enteredText)}
                 value={props.value}
+                autoCapitalize={props.autoCapitalize}
                 secureTextEntry={props.secure}
                 multiline={props.multi} 
                 onContentSizeChange={(event) => {

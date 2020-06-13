@@ -20,7 +20,7 @@ export default function App() {
     return {
       signIn: (username, password, setResponseText) => {
         if (username && password) {
-          fetch('http://10.0.2.2:5000/signin', {
+          fetch('https://nkchia.pythonanywhere.com/signin', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -35,7 +35,7 @@ export default function App() {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  SecureStore.setItemAsync('token', json.token).then((error) => {
+                  SecureStore.setItemAsync('user', JSON.stringify(json)).then((error) => {
                     if (error) {
                       setResponseText('' + error);
                     } else {
@@ -58,7 +58,7 @@ export default function App() {
       },
       signUp: (username, password, displayName, navigation, setResponseText) => {
         if (username && password && displayName) {
-          fetch('http://10.0.2.2:5000/create', {
+          fetch('https://nkchia.pythonanywhere.com/create', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -93,7 +93,7 @@ export default function App() {
       },
       signOut: () => {
         // Delete cached user info
-        SecureStore.setItemAsync('token', '').then((error) => {
+        SecureStore.setItemAsync('user', '').then((error) => {
           if (error) {
             setResponseText('' + error);
           } else {
