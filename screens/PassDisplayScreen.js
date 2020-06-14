@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, Text, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -48,25 +48,36 @@ export default ({ route }) => {
     }
   )
   
+  let displayStyle;
+  if (entries.length <= 0) {
+    displayStyle = styles.displayContainer;
+  } else {
+    displayStyle = {...styles.displayContainer, justifyContent:'flex-start'};
+  }
+
   return (
-    <View style={styles.displayContainer}>
+    <ScrollView contentContainerStyle={displayStyle}>
       {
         entries.length <= 0 &&
         <Text style={styles.noEntry}>{responseMsg}</Text>
       }
-      {entries.map((entry) => <DisplayEntry title={entry.title} text={entry.text}/>)}
-    </View>
+      {entries.map((entry) => <DisplayEntry key={entry.key} title={entry.title} text={entry.text}/>)}
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   displayContainer: {
     paddingTop: '5%',
+    flex: 1,
+    justifyContent: 'center',
   }, 
+  hasEntry: {
+    justifyContent:'flex-start',
+  },
   noEntry: {
     ...Styles.fontFamily,
     alignSelf: 'center',
     fontSize: 15,
-    marginTop: '55%',
   }
 });

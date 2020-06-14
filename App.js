@@ -56,37 +56,41 @@ export default function App() {
           });
         }
       },
-      signUp: (username, password, displayName, navigation, setResponseText) => {
-        if (username && password && displayName) {
-          fetch('https://nkchia.pythonanywhere.com/create', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              username: username,
-              password: password,
-              displayName: displayName,
-            })
-          }).then((response) => {
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-              return response.json().then(json => {
-                if (response.status === 200) {
-                  navigation.replace('ReturnSignInScreen');
-                } else {
-                  // User already exists
-                  setResponseText(json.msg);
-                }
-              });
-            } else {
-              // Not JSON, most likely server error
-              setResponseText('Unexpected error occured');
-            }
-          }).catch((error) => {
-              setResponseText('' + error);
-          });
+      signUp: (username, password, confirmPass, displayName, navigation, setResponseText) => {
+        if (username && password && confirmPass && displayName) {
+          if (password !== confirmPass) {
+            setResponseText('Passwords are different');
+          } else {
+            fetch('https://nkchia.pythonanywhere.com/create', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: username,
+                password: password,
+                displayName: displayName,
+              })
+            }).then((response) => {
+              const contentType = response.headers.get("content-type");
+              if (contentType && contentType.indexOf("application/json") !== -1) {
+                return response.json().then(json => {
+                  if (response.status === 200) {
+                    navigation.replace('ReturnSignInScreen');
+                  } else {
+                    // User already exists
+                    setResponseText(json.msg);
+                  }
+                });
+              } else {
+                // Not JSON, most likely server error
+                setResponseText('Unexpected error occured');
+              }
+            }).catch((error) => {
+                setResponseText('' + error);
+            });
+          }
         } else {
           setResponseText('Please fill out all fields');
         }

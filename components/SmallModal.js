@@ -39,7 +39,8 @@ const SmallModal = props => {
 const styles = StyleSheet.create({
     smallContainer: {
         ...Styles.coloredBorder,
-        marginTop: '50%',
+        position: 'absolute',
+        top: '35%',
         width: '70%',
         alignSelf: 'center',
         backgroundColor: 'white',
@@ -48,14 +49,16 @@ const styles = StyleSheet.create({
     smallTitle: {
         ...Styles.fontFamily,
         fontSize: 20,
-        alignSelf: 'center',
+        textAlign:'center',
         marginBottom: '10%',
+        width: '100%',
     },
     smallText: {
         ...Styles.fontFamily,
         fontSize: 15,
-        alignSelf: 'center',
+        textAlign: 'center',
         marginBottom: '10%',
+        width:'100%',
     },
     smallPrompt : {
         flexDirection: 'row',

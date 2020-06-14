@@ -29,8 +29,8 @@ export default ({ navigation }) => {
       try {
         let {coords} = await Location.getCurrentPositionAsync({});
         let locationArray = (await Location.reverseGeocodeAsync(coords))[0];
-        let address = locationArray.street + ',\n' + locationArray.region + ', \n' +
-          locationArray.postalCode + ', \n' + locationArray.isoCountryCode;
+        let address = locationArray.street + ', ' + locationArray.region + ', ' +
+          locationArray.postalCode + ', ' + locationArray.isoCountryCode;
 
         SecureStore.getItemAsync('user').then((user) => {
           let json = JSON.parse(user);
@@ -92,7 +92,7 @@ export default ({ navigation }) => {
   }, [navigation]);
   
   return (
-    <View>
+    <View style={styles.screenContainer}>
       <SmallModal 
         visible={responseVisible}
         title={responseTitle}
@@ -112,6 +112,7 @@ export default ({ navigation }) => {
             <PassEntry 
               title={passEntry.item.username} 
               distance={passEntry.item.distance}
+              key={passEntry.item.key}
               onPress={()=>{navigation.navigate('PassDisplayScreen', {passEntry: passEntry.item})}}
             />
           } 
@@ -125,6 +126,10 @@ export default ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    height: '100%',
+    justifyContent:'center'
+  },
   listContainer : {
     alignSelf : "center",
     width: '80%', 
@@ -132,7 +137,6 @@ const styles = StyleSheet.create({
   },
   noPass : {
     ...Styles.fontFamily,
-    marginTop:'60%',
     alignSelf: 'center',
   }
 });
