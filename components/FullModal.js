@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import {  Modal, View, StyleSheet, Text } from 'react-native';
+import {  Modal, View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as Styles  from '../styles/master';
 import { Dimensions } from "react-native";
+import {Keyboard} from 'react-native';
 
 import InfoInput from '../components/InfoInput';
 import SubmitButton from '../components/SubmitButton';
@@ -60,51 +61,53 @@ const FullModal = props => {
                 }
             }}
         >
-            <View style= {{...styles.modalContainer, height: screenHeight}}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerTitle}>{props.headerTitle}</Text>
-                    <Enticons name={'cross'} size={30} onPress={() => {
-                        setNewValue('');
-                        setNewTitle('');
-                        setValidEntry('');
-                        props.setModalVisible(false);
-                    }} />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style= {{...styles.modalContainer, height: screenHeight}}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.headerTitle}>{props.headerTitle}</Text>
+                        <Enticons name={'cross'} size={30} onPress={() => {
+                            setNewValue('');
+                            setNewTitle('');
+                            setValidEntry('');
+                            props.setModalVisible(false);
+                        }} />
+                    </View>
+                
+                    {titleInput}
+
+                    {textInput}
+
+                    <Text style={styles.validEntry}>{validEntry}</Text>
+
+                    <SubmitButton 
+                        containerStyle={styles.saveButton} 
+                        title={'Save Changes'}
+                        onPress={() => {
+                            if (!props.partial) {
+                                if (newTitle && newValue) {
+                                    props.submitFunction(newTitle, newValue, props.entryKey);
+                                    setNewTitle('');
+                                    setNewValue('');
+                                    setValidEntry('');
+                                    props.setModalVisible(false);
+                                } else {
+                                    setValidEntry('Both fields cannot be empty');
+                                }
+                            } else {
+                                if (newValue) {
+                                    props.submitFunction(newValue);
+                                    setNewTitle('');
+                                    setNewValue('');
+                                    setValidEntry('');
+                                    props.setModalVisible(false);
+                                } else {
+                                    setValidEntry('Display name cannot be empty');
+                                }
+                            }
+                        }}
+                    />
                 </View>
-            
-                {titleInput}
-
-                {textInput}
-
-                <Text style={styles.validEntry}>{validEntry}</Text>
-
-                <SubmitButton 
-                    containerStyle={styles.saveButton} 
-                    title={'Save Changes'}
-                    onPress={() => {
-                        if (!props.partial) {
-                            if (newTitle && newValue) {
-                                props.submitFunction(newTitle, newValue, props.entryKey);
-                                setNewTitle('');
-                                setNewValue('');
-                                setValidEntry('');
-                                props.setModalVisible(false);
-                            } else {
-                                setValidEntry('Both fields cannot be empty');
-                            }
-                        } else {
-                            if (newValue) {
-                                props.submitFunction(newValue);
-                                setNewTitle('');
-                                setNewValue('');
-                                setValidEntry('');
-                                props.setModalVisible(false);
-                            } else {
-                                setValidEntry('Display name cannot be empty');
-                            }
-                        }
-                    }}
-                />
-            </View>
+            </TouchableWithoutFeedback>
         </Modal>
     );
 }
