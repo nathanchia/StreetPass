@@ -27,7 +27,7 @@ export const fontFamily = {
 // For pass info entries and edit entries
 export const entryContainer = {
     width: '80%',
-    marginBottom : 30,
+    marginTop : 30,
     alignSelf: 'center',
 }
 

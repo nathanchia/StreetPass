@@ -49,8 +49,8 @@ const EditEntry = props => {
                 text={'Once deleted, this entry will be gone forever'}
                 isPrompt={true}
                 okCallback={() => {
-                    props.onDelete(props.entryKey);
                     setDeleteVisible(false);
+                    props.onDelete(props.entryKey);
                 }}
                 noCallback={() => {setDeleteVisible(false);}}
             />

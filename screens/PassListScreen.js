@@ -7,12 +7,15 @@ import PassEntry from '../components/PassEntry';
 import PingButton from '../components/PingButton';
 import SmallModal from '../components/SmallModal';
 import * as Styles from '../styles/master';
+import SpinnerModal from '../components/SpinnerModal';
 
 export default ({ navigation }) => {
   const[passes, setPasses] = useState([]);
   const[responseVisible, setResponseVisible] = useState(false);
   const[responseTitle, setResponseTitle] = useState('');
   const[responseText, setResponseText] = useState('');
+  const[isLoading, setIsLoading] = useState(false);
+  const[noPass, setNoPass] = useState('Ping to get passes');
 
   const showResponse = (title, text) => {
     setResponseTitle(title);
@@ -26,6 +29,10 @@ export default ({ navigation }) => {
     if (status !== 'granted') {
       setResponseText('Needs permission to ping for passes');
     } else {
+      setIsLoading(true);
+      // Clear 'Empty list' statement
+      setNoPass('');
+
       try {
         let {coords} = await Location.getCurrentPositionAsync({});
         let locationArray = (await Location.reverseGeocodeAsync(coords))[0];
@@ -47,6 +54,8 @@ export default ({ navigation }) => {
               longitude: coords.longitude,
             })
           }).then((response) => {
+            setIsLoading(false);
+
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
@@ -61,6 +70,7 @@ export default ({ navigation }) => {
                     setPasses(json.passes);
                   } else {
                     showResponse('Found 0 passes', 'No one\'s near you.\nTry again later');
+                    setNoPass('Ping to get passes');
                     setPasses([]);
                   }
                 }
@@ -71,14 +81,17 @@ export default ({ navigation }) => {
             }
           }).catch((error) => {
               // fetch error
+              setIsLoading(false);
               showResponse('Error', error);
           });
         }).catch((error) => {
           // Get userinfo storage error
+          setIsLoading(false);
           showResponse('Error', error);
         });
       } catch (error) {
         // Get position error
+        setIsLoading(false);
         showResponse('Error', error);
       }
     } 
@@ -102,6 +115,8 @@ export default ({ navigation }) => {
         }}
       />
       
+      <SpinnerModal visible={isLoading} />
+
       {
         passes.length > 0
         ? 
@@ -118,7 +133,7 @@ export default ({ navigation }) => {
           } 
         />
         : 
-        <Text style={styles.noPass}>{'Ping to get passes'}</Text> 
+        <Text style={styles.noPass}>{noPass}</Text> 
       }
       
     </View>

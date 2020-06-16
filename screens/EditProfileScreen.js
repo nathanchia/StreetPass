@@ -151,7 +151,6 @@ export default ({navigation}) => {
 
 const styles = StyleSheet.create({
   editContainer : {
-    paddingTop : '5%',
     height: '100%',
   }, 
 });

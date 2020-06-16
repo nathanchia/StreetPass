@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import {Keyboard} from 'react-native';
 
 import { AuthContext } from '../contexts/AuthContext';
 import SubmitButton from '../components/SubmitButton';
 import InfoInput from '../components/InfoInput';
+import SpinnerModal from '../components/SpinnerModal';
 import * as Styles from '../styles/master';
 
 export default ({navigation}) => {
@@ -13,16 +15,30 @@ export default ({navigation}) => {
   const [confirmPass, setConfirmPass] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [responseText, setResponseText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <View style={styles.createAccountContainer}>
-        <InfoInput autoCapitalize={'none'} field='Username' onChangeText={setUsername} value={username}/>
-        <InfoInput  autoCapitalize={'none'} field='Password' onChangeText={setPassword} value={password} secure={true}/>
-        <InfoInput  autoCapitalize={'none'} field='Confirm Password' onChangeText={setConfirmPass} value={confirmPass} secure={true}/>
-        <InfoInput field='Display Name' onChangeText={setDisplayName} value={displayName}/>
-        <Text style={styles.responseText}>{responseText}</Text>
-        <SubmitButton title='Create Account' onPress={()=>{authFunctions.signUp(username, password, confirmPass, displayName, navigation, setResponseText);}}/>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.createAccountContainer}>
+          <SpinnerModal visible={isLoading} />
+          <InfoInput autoCapitalize={'none'} field='Username' onChangeText={setUsername} value={username}/>
+          <InfoInput  autoCapitalize={'none'} field='Password' onChangeText={setPassword} value={password} secure={true}/>
+          <InfoInput  autoCapitalize={'none'} field='Confirm Password' onChangeText={setConfirmPass} value={confirmPass} secure={true}/>
+          <InfoInput field='Display Name' onChangeText={setDisplayName} value={displayName}/>
+          <Text style={styles.responseText}>{responseText}</Text>
+          <SubmitButton 
+            title='Create Account' 
+            onPress={()=>{authFunctions.signUp(
+              username, 
+              password, 
+              confirmPass, 
+              displayName, 
+              navigation, 
+              setResponseText, 
+              setIsLoading);}}
+          />
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 

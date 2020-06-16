@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
+import { StyleSheet, Text, ScrollView, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 
 import DisplayEntry from '../components/DisplayEntry';
 import * as Styles from '../styles/master';
+import SpinnerModal from '../components/SpinnerModal';
 
 export default ({ route }) => {
   const[entries, setEntries] = useState([]);
   const[responseMsg, setResponseMsg] = useState('');
+  const[isLoading, setIsLoading] = useState(true);
 
-  useFocusEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
       let targetId = route.params.passEntry.key;
       SecureStore.getItemAsync('user').then((user) => {
         let json = JSON.parse(user);
@@ -28,52 +33,69 @@ export default ({ route }) => {
             return response.json().then(json => {
               if (response.status === 200) {
                 let entriesArray = JSON.parse(json.entries);
-                if (entriesArray.length <= 0) {
-                  setResponseMsg('This user has nothing to say');
-                } 
-                setEntries(entriesArray);
+                if (isActive) {
+                  if (entriesArray.length <= 0) {
+                    setResponseMsg('This user has nothing to say');
+                  }
+                  setEntries(entriesArray);
+                  setIsLoading(false);
+                }
               }
             });
           } else {
-            setResponseMsg('Unexpected error occured');
+            if (isActive) {
+              setResponseMsg('Unexpected error occured');
+            }
           }
         }).catch((error) => {
           // Fetch Error
-          setResponseMsg(''+ error);
+          if (isActive) {
+            setIsLoading(false);
+            setResponseMsg(''+ error);
+          }
         });
       }).catch((error) => {
         // SecureStorage error
-        setResponseMsg('' + error);
+        if (isActive) {
+          setIsLoading(false);
+          setResponseMsg(''+ error);
+        }
       });
-    }
+
+      return () => {
+        isActive = false;
+      };
+    })
   )
   
-  let displayStyle;
+  let display;
   if (entries.length <= 0) {
-    displayStyle = styles.displayContainer;
+    display =
+      <View style={styles.noEntryContainer}>
+        <Text style={styles.noEntry}>{responseMsg}</Text>
+      </View>;
   } else {
-    displayStyle = {...styles.displayContainer, justifyContent:'flex-start'};
+    display = 
+      <ScrollView >
+        {entries.map((entry) => <DisplayEntry key={entry.key} title={entry.title} text={entry.text}/>)}
+      </ScrollView>;
   }
 
   return (
-    <ScrollView contentContainerStyle={displayStyle}>
-      {
-        entries.length <= 0 &&
-        <Text style={styles.noEntry}>{responseMsg}</Text>
-      }
-      {entries.map((entry) => <DisplayEntry key={entry.key} title={entry.title} text={entry.text}/>)}
-    </ScrollView>
+    <View style={styles.displayContainer}>
+      <SpinnerModal visible={isLoading} />
+      {display}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   displayContainer: {
-    paddingTop: '5%',
     flex: 1,
-    justifyContent: 'center',
   }, 
-  hasEntry: {
-    justifyContent:'flex-start',
+  noEntryContainer: {
+    height: '100%',
+    justifyContent: 'center', 
   },
   noEntry: {
     ...Styles.fontFamily,

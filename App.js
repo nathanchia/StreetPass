@@ -18,8 +18,10 @@ export default function App() {
 
   const authContext = useMemo(() =>{
     return {
-      signIn: (username, password, setResponseText) => {
+      signIn: (username, password, setResponseText, setIsLoading) => {
         if (username && password) {
+          setIsLoading(true);
+
           fetch('https://nkchia.pythonanywhere.com/signin', {
             method: 'POST',
             headers: {
@@ -31,6 +33,8 @@ export default function App() {
               password: password, 
             })
           }).then((response) => {
+            setIsLoading(false);
+
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
@@ -52,15 +56,17 @@ export default function App() {
               setResponseText('Unexpected error occured');
             }
           }).catch((error) => {
+              setIsLoading(false);
               setResponseText('' + error);
           });
         }
       },
-      signUp: (username, password, confirmPass, displayName, navigation, setResponseText) => {
+      signUp: (username, password, confirmPass, displayName, navigation, setResponseText, setIsLoading) => {
         if (username && password && confirmPass && displayName) {
           if (password !== confirmPass) {
             setResponseText('Passwords are different');
           } else {
+            setIsLoading(true);
             fetch('https://nkchia.pythonanywhere.com/create', {
               method: 'POST',
               headers: {
@@ -73,6 +79,8 @@ export default function App() {
                 displayName: displayName,
               })
             }).then((response) => {
+              setIsLoading(false);
+
               const contentType = response.headers.get("content-type");
               if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json().then(json => {
@@ -88,6 +96,7 @@ export default function App() {
                 setResponseText('Unexpected error occured');
               }
             }).catch((error) => {
+                setIsLoading(false);
                 setResponseText('' + error);
             });
           }
