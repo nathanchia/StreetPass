@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import { AsyncStorage } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
 
@@ -40,10 +41,20 @@ export default function App() {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
+                  AsyncStorage.getAllKeys().then((keys) => {
+                    if(!keys.includes('settings')) {
+                      // Default setting of distance, 3 miles. 
+                      // If assigned to 'none' instead, server will not filter
+                      // For now setting is just a string, will be object if more params
+                      AsyncStorage.setItem('settings', '3');
+                      console.log('Default Settings');
+                    }
+                  });
+
                   let user = {token:json.token, displayName:json.displayName};
                   SecureStore.setItemAsync('user', JSON.stringify(user)).then(
-                    SecureStore.setItemAsync('favorites', json.favorites).then(
-                      SecureStore.setItemAsync('entries', json.entries).then(() => {
+                    AsyncStorage.setItem('favorites', json.favorites).then(
+                      AsyncStorage.setItem('entries', json.entries).then(() => {
                           setUserToken(json.token);
                       })
                     )
@@ -58,8 +69,9 @@ export default function App() {
               setResponseText('Server error');
             }
           }).catch((error) => {
-              setIsLoading(false);
-              setResponseText('' + error);
+            // Fetch error
+            setIsLoading(false);
+            setResponseText('' + error);
           });
         }
       },
@@ -98,8 +110,9 @@ export default function App() {
                 setResponseText('Server error');
               }
             }).catch((error) => {
-                setIsLoading(false);
-                setResponseText('' + error);
+              // Fetch error
+              setIsLoading(false);
+              setResponseText('' + error);
             });
           }
         } else {
@@ -109,8 +122,8 @@ export default function App() {
       signOut: () => {
         // Delete cached user info
         SecureStore.setItemAsync('user', '').then(
-          SecureStore.setItemAsync('favorites', '').then(
-            SecureStore.setItemAsync('entries', '').then(() => {
+          AsyncStorage.setItem('favorites', '').then(
+            AsyncStorage.setItem('entries', '').then(() => {
                 setUserToken(null);
             })
           )

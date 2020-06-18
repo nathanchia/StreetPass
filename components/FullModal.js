@@ -15,6 +15,8 @@ const FullModal = props => {
     const [newTitle, setNewTitle] = useState('');
     const [newValue , setNewValue] = useState('');
     const [validEntry, setValidEntry] = useState('');
+
+    // Ensures Submit button is always at the right abs pos
     const screenHeight = Math.round(Dimensions.get('window').height);
 
     // Only allow title editing if not display name
@@ -51,6 +53,7 @@ const FullModal = props => {
         />;
     }
 
+    // onShow loads the previous entries to allow easy editing
     return (
         <Modal 
             animationType={'slide'} 
@@ -85,6 +88,7 @@ const FullModal = props => {
                         onPress={() => {
                             if (!props.partial) {
                                 if (newTitle && newValue) {
+                                    //props.entryKey is optional and provided for removal of entry
                                     props.submitFunction(newTitle, newValue, props.entryKey);
                                     setNewTitle('');
                                     setNewValue('');
@@ -95,6 +99,7 @@ const FullModal = props => {
                                 }
                             } else {
                                 if (newValue) {
+                                    // Just the display name
                                     props.submitFunction(newValue);
                                     setNewTitle('');
                                     setNewValue('');

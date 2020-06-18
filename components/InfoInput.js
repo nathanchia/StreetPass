@@ -21,6 +21,8 @@ const InfoInput = props => {
                 multiline={props.multi} 
                 onContentSizeChange={(event) => {
                     let newHeight = event.nativeEvent.contentSize.height;
+                    // 140 is arbitrary may change in future
+                    // React does not allow props to be used to check for screen height
                     if (newHeight <= 140) {
                         setInputHeight(newHeight);
                     } else {

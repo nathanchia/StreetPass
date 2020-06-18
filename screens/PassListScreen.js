@@ -17,6 +17,7 @@ export default ({ navigation }) => {
   const[isLoading, setIsLoading] = useState(false);
   const[noPass, setNoPass] = useState('Ping to get passes');
 
+  // Shows small modal, used to relay errors/show #of passes and address
   const showResponse = (title, text) => {
     setResponseTitle(title);
     setResponseText('' + text);
@@ -27,15 +28,28 @@ export default ({ navigation }) => {
   async function ping() {
     let { status } = await Location.requestPermissionsAsync();
     if (status === 'granted') {
-      setIsLoading(true);
       // Clear 'Empty list' statement
       setNoPass('');
 
+      setIsLoading(true);
+  
       try {
         let {coords} = await Location.getCurrentPositionAsync({});
         let locationArray = (await Location.reverseGeocodeAsync(coords))[0];
-        let address = locationArray.street + ', ' + locationArray.region + ', ' +
-          locationArray.postalCode + ', ' + locationArray.isoCountryCode;
+        let address = '';
+        // Make sure all parts are not null
+        if (locationArray.street) {
+          address += (locationArray.street + ', ');
+        } 
+        if (locationArray.region) {
+          address += (locationArray.region + ', ');
+        }
+        if (locationArray.postalCode) {
+          address += (locationArray.postalCode + ', ');
+        }
+        if (locationArray.isoCountryCode) {
+          address += locationArray.isoCountryCode;
+        }
 
         SecureStore.getItemAsync('user').then((user) => {
           let token = JSON.parse(user).token;
@@ -71,25 +85,30 @@ export default ({ navigation }) => {
                     setNoPass('Ping to get passes');
                     setPasses([]);
                   }
+                } else {
+                  // Internal server error such as no token
+                  setIsLoading(false);
+                  showResponse('Error', json.msg);
+                  setNoPass('Ping to get Passes');
                 }
               });
             } else {
               // Not JSON, most likely server error
+              setIsLoading(false);
               showResponse('Error', 'Server error');
+              setNoPass('Ping to get Passes');
             }
           }).catch((error) => {
               // fetch error
               setIsLoading(false);
               showResponse('Error', error);
+              setNoPass('Ping to get Passes');
           });
-        }).catch((error) => {
-          // Get userinfo storage error
-          setIsLoading(false);
-          showResponse('Error', error);
         });
       } catch (error) {
         setIsLoading(false);
         showResponse('Error', error);
+        setNoPass('Ping to get Passes');
       }
     } 
   };

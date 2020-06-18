@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, AsyncStorage } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import Enticons from 'react-native-vector-icons/Entypo';
 
@@ -10,8 +10,13 @@ import SmallModal from '../components/SmallModal';
 
 export default ({ route, navigation }) => {
   const[entries, setEntries] = useState([]);
+
+  // Used to display initial loading error, or empty pass
   const[responseMsg, setResponseMsg] = useState('');
+  
   const[isLoading, setIsLoading] = useState(true);
+
+  // Other responses here
   const[showOk, setShowOk] = useState(false);
   const[okTitle, setOkTitle] = useState('');
   const[okText, setOkText] = useState('');
@@ -40,16 +45,12 @@ export default ({ route, navigation }) => {
             name={'heart-outlined'} 
             size={30} 
             onPress={()=>{
-              SecureStore.getItemAsync('favorites').then((favorites)=>{
+              AsyncStorage.getItem('favorites').then((favorites)=>{
                 let favArray = JSON.parse(favorites);
                 favArray.push({key: route.params.passEntry.key, displayName: route.params.passEntry.displayName});
                 let strFav = JSON.stringify(favArray);
                 favHandler(strFav, true);
-              }).catch(error=> {
-                setOkTitle('Error');
-                setOkText(error);
-                setShowOk(true);
-              })
+              });
             }}
           />
         ),
@@ -96,16 +97,12 @@ export default ({ route, navigation }) => {
           setIsLoading(false);
           setResponseMsg(''+ error);
       });
-    }).catch((error) => {
-      // SecureStorage error
-
     });
   },[])
       
-  // Fav/Unfav function that takes STRING of an array of favorite entries
-  // in the form '[{key: 1, displayName: 'test'}]
-  // isNoWFav is a boolean. If true, displays smallModal after successful POST
-  // and also changes header fill based on it
+  // Fav/Unfav function that takes STRING newFav in the form '[{key: 1, displayName: 'test'}]
+  // isNowFav is a boolean. If true, displays smallModal after successful POST
+  // Changes header after POST as well
   const favHandler = (newFav, isNowFav) => {
     SecureStore.getItemAsync('user').then((user) => {
       let token = JSON.parse(user).token;
@@ -121,26 +118,17 @@ export default ({ route, navigation }) => {
           newFav:newFav
         })
       }).then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json().then(json => {
-            if (response.status === 200) {
-              if (isNowFav) {
-                setOkTitle('Success');
-                setOkText('You have added this user to your favorites');
-                setShowOk(true);
-              }
-              setHeader(isNowFav);
-              SecureStore.setItemAsync('favorites', newFav).catch(error=> {
-                //Set Storage error
-                setOkTitle('Error');
-                setOkText(error);
-                setShowOk(true);
-              });
-            }
-          });
+        if (response.status === 200) {
+          // Only show header if adding as a fav
+          if (isNowFav) {
+            setOkTitle('Success');
+            setOkText('You have added this user to your favorites');
+            setShowOk(true);
+          }
+
+          setHeader(isNowFav);
+          AsyncStorage.setItem('favorites', newFav);
         } else {
-          // Not JSON, most likely server error
           setOkTitle('Error');
           setOkText('Server Error');
           setShowOk(true);
@@ -148,14 +136,9 @@ export default ({ route, navigation }) => {
       }).catch((error) => {
           // fetch error
           setOkTitle('Error');
-          setOkText(error);
+          setOkText('' + error);
           setShowOk(true);
       });
-    }).catch((error) => {
-      // Get storage error
-      setOkTitle('Error');
-      setOkText(error);
-      setShowOk(true);
     });
   }
 
@@ -191,7 +174,7 @@ export default ({ route, navigation }) => {
         okCallback={()=>{
           setShowPrompt(false);
 
-          SecureStore.getItemAsync('favorites').then((favorites)=>{
+          AsyncStorage.getItem('favorites').then((favorites)=>{
             let rmKey = route.params.passEntry.key;
             let favArray = JSON.parse(favorites);
             let newArray = favArray.filter(function(entry) {
@@ -199,11 +182,7 @@ export default ({ route, navigation }) => {
             });
             let strFav = JSON.stringify(newArray);
             favHandler(strFav, false);
-          }).catch(error=> {
-            setOkTitle('Error');
-            setOkText(error);
-            setShowOk(true);
-          })
+          });
         }}
         isPrompt={true}
         noCallback={()=>{

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, AsyncStorage } from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as SecureStore from 'expo-secure-store';
 
@@ -34,17 +34,16 @@ export default ({navigation}) => {
     SecureStore.getItemAsync('user').then((user) => {
       let displayName = JSON.parse(user).displayName;
       setDisplayName(displayName);
-      SecureStore.getItemAsync('entries').then((entries) => {
+      AsyncStorage.getItem('entries').then((entries) => {
         let entriesArray = JSON.parse(entries);
         setPassEntries(entriesArray);
       })
-    }).catch((error)=> {
-      reportError('' + error);
-    })
+    });
   }, []);
 
   // Skeleton code for post requests to server
   // callbackFunction is called when POST request is successful
+  // ^ usually used to update current state visually
   const postRequest = (url, body, callbackFunc) => {
     SecureStore.getItemAsync('user').then((user) => {
       let token = JSON.parse(user).token;
@@ -67,9 +66,6 @@ export default ({navigation}) => {
         // Fetch Error
         reportError(''+ error);
       });
-    }).catch((error) => {
-      // SecureStorage error
-      reportError('' + error);
     });
   };
 
@@ -79,6 +75,7 @@ export default ({navigation}) => {
     })
   }
 
+  // Entries are in the form {key: newKey ,title: newTitle, text: newValue}
   const newEntry = (newTitle, newValue) => {
     let newKey = new Date().getTime() + newTitle;
     let newEntries = [...passEntries, {key: newKey ,title: newTitle, text: newValue}];

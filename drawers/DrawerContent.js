@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Enticons from 'react-native-vector-icons/Entypo';
 
 import { AuthContext} from '../contexts/AuthContext';
@@ -24,6 +24,12 @@ export default (props) => {
           labelStyle={{...Style.fontFamily}} 
           icon={()=><Enticons name={'pencil'} size={20}/>} 
           onPress={()=>{props.navigation.navigate('EditProfileStack')}}
+        />
+        <DrawerItem 
+          label='Settings' 
+          labelStyle={{...Style.fontFamily}} 
+          icon={()=><Enticons name={'cog'} size={20}/>} 
+          onPress={()=>{props.navigation.navigate('SettingsStack')}}
         />
         <DrawerItem 
           label='Sign Out' 

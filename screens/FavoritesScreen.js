@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
+import { StyleSheet, Text, View, FlatList, AsyncStorage } from 'react-native';
 
 import * as Styles from '../styles/master';
 import PassEntry from '../components/PassEntry';
@@ -12,18 +11,14 @@ export default ({navigation}) => {
   // On navigate to this screen, load most recent favorites
   React.useEffect(() => {
     const loadFav = navigation.addListener('focus', () => {
-      SecureStore.getItemAsync('favorites').then(favorites => {
+      AsyncStorage.getItem('favorites').then(favorites => {
         let favArray = JSON.parse(favorites);
         setFavorites(favArray);
         if (favArray.length <= 0) {
           setResponseMsg('No favorite passes')
         }  
-      }).catch(error => {
-          setFavorites([]);
-          setResponseMsg(error);
-      })
+      });
     });
-
     return loadFav;
   }, [navigation]);
 
