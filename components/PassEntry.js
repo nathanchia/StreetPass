@@ -12,7 +12,7 @@ const PassEntry = props => {
             <Text style={styles.entryText}>{props.title}</Text>
             {
               props.hasDistance &&
-              <Text style={styles.entryText}>{props.distance + ' meters'}</Text>
+              <Text style={styles.entryText}>{props.distance + ' miles'}</Text>
             }
             
         </TouchableOpacity>

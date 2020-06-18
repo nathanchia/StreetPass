@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList, Text} from 'react-native';
+import { StyleSheet, View, FlatList, Text, AsyncStorage} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
@@ -34,6 +34,8 @@ export default ({ navigation }) => {
       setIsLoading(true);
   
       try {
+        // Based on user settings
+        let maxDistance = await AsyncStorage.getItem('settings');
         let {coords} = await Location.getCurrentPositionAsync({});
         let locationArray = (await Location.reverseGeocodeAsync(coords))[0];
         let address = '';
@@ -54,6 +56,7 @@ export default ({ navigation }) => {
         SecureStore.getItemAsync('user').then((user) => {
           let token = JSON.parse(user).token;
           let auth = 'Bearer ' + token;
+
           fetch('https://nkchia.pythonanywhere.com/ping', {
             method: 'POST',
             headers: {
@@ -62,6 +65,7 @@ export default ({ navigation }) => {
               Authorization: auth,
             },
             body: JSON.stringify({
+              maxDistance: maxDistance,
               latitude: coords.latitude,
               longitude: coords.longitude,
             })

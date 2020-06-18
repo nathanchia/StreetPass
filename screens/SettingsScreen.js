@@ -8,7 +8,7 @@ import * as Styles from '../styles/master';
 
 export default SettingsScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [sliderVal, setSliderVal] = useState(0);
+  const [sliderVal, setSliderVal] = useState(1);
   const [showModal, setShowModal] = useState(false);
 
   // Load settings saved
