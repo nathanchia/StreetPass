@@ -1,14 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import SpinnerModal from '../components/SpinnerModal';
 
 export default () => {
   return (
-    <View>
-        <Text>Loading!</Text>
-    </View>
+    <SpinnerModal visible={true}/>
   )
 }
-
-const styles = StyleSheet.create({
- 
-});

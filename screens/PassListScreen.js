@@ -26,9 +26,7 @@ export default ({ navigation }) => {
   // Ping function
   async function ping() {
     let { status } = await Location.requestPermissionsAsync();
-    if (status !== 'granted') {
-      setResponseText('Needs permission to ping for passes');
-    } else {
+    if (status === 'granted') {
       setIsLoading(true);
       // Clear 'Empty list' statement
       setNoPass('');
@@ -40,8 +38,8 @@ export default ({ navigation }) => {
           locationArray.postalCode + ', ' + locationArray.isoCountryCode;
 
         SecureStore.getItemAsync('user').then((user) => {
-          let json = JSON.parse(user);
-          let auth = 'Bearer ' + json.token;
+          let token = JSON.parse(user).token;
+          let auth = 'Bearer ' + token;
           fetch('https://nkchia.pythonanywhere.com/ping', {
             method: 'POST',
             headers: {
@@ -63,13 +61,13 @@ export default ({ navigation }) => {
                   let numPasses = json.passes.length;
                   if (numPasses > 0) {
                     if (numPasses > 1) {
-                      showResponse('Found ' + json.passes.length + ' passes!', address);
+                      showResponse('Found ' + json.passes.length + ' passes at', address);
                     } else {
-                      showResponse('Found 1 pass!', address);
+                      showResponse('Found 1 pass at', address);
                     }
                     setPasses(json.passes);
                   } else {
-                    showResponse('Found 0 passes', 'No one\'s near you.\nTry again later');
+                    showResponse('Found 0 passes at', address);
                     setNoPass('Ping to get passes');
                     setPasses([]);
                   }
@@ -77,7 +75,7 @@ export default ({ navigation }) => {
               });
             } else {
               // Not JSON, most likely server error
-              showResponse('Error', 'Unexpected error occured');
+              showResponse('Error', 'Server error');
             }
           }).catch((error) => {
               // fetch error
@@ -90,7 +88,6 @@ export default ({ navigation }) => {
           showResponse('Error', error);
         });
       } catch (error) {
-        // Get position error
         setIsLoading(false);
         showResponse('Error', error);
       }
@@ -125,7 +122,8 @@ export default ({ navigation }) => {
           data={passes} 
           renderItem={passEntry => 
             <PassEntry 
-              title={passEntry.item.username} 
+              title={passEntry.item.displayName} 
+              hasDistance={true}
               distance={passEntry.item.distance}
               key={passEntry.item.key}
               onPress={()=>{navigation.navigate('PassDisplayScreen', {passEntry: passEntry.item})}}

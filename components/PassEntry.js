@@ -4,11 +4,17 @@ import * as Styles  from '../styles/master';
 
 // Displays a pass in home tabs and favourite tabs
 // Includes display name distance from user
+// Required props: onPress, title
+// Optional props: hasDistance <- if true, distance prop is required
 const PassEntry = props => {
     return (
         <TouchableOpacity activeOpacity={0.6} style={styles.entryContainer} onPress={props.onPress}>
             <Text style={styles.entryText}>{props.title}</Text>
-            <Text style={styles.entryText}>{props.distance + ' meters'}</Text>
+            {
+              props.hasDistance &&
+              <Text style={styles.entryText}>{props.distance + ' meters'}</Text>
+            }
+            
         </TouchableOpacity>
     );
 }

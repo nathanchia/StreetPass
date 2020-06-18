@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Enticons from 'react-native-vector-icons/Entypo';
 
 import PassStack from '../stacks/PassStack';
-import FavouritesStack from '../stacks/FavouritesStack';
+import FavoritesStack from '../stacks/FavoritesStack';
 import * as Styles from '../styles/master';
 
 const HomeTabs = createBottomTabNavigator();
@@ -17,7 +17,7 @@ export default () => {
 
           if (route.name === 'PassStack') {
             iconName = focused ? 'text-document-inverted' : 'text-document';
-          } else if (route.name === 'FavouritesStack') {
+          } else if (route.name === 'FavoritesStack') {
             iconName = focused ? 'heart' : 'heart-outlined';
           }
 
@@ -33,7 +33,7 @@ export default () => {
       }}
     >
         <HomeTabs.Screen name='PassStack' component = {PassStack} options={{title: 'Street Passes'}}/>
-        <HomeTabs.Screen name='FavouritesStack' component ={FavouritesStack} options={{title: 'Favourites'}}/>
+        <HomeTabs.Screen name='FavoritesStack' component ={FavoritesStack} options={{title: 'Favorites'}}/>
     </HomeTabs.Navigator>
   )
 }

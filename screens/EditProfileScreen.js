@@ -22,18 +22,6 @@ export default ({navigation}) => {
 
   // Loads user information from server when first mounted
   useEffect(() => {
-    SecureStore.getItemAsync('user').then((user) => {
-      let json = JSON.parse(user);
-      setDisplayName(json.displayName);
-      let entriesArray = JSON.parse(json.entries);
-      setPassEntries(entriesArray);
-    }).catch((error)=> {
-      reportError('' + error);
-    })
-  }, []);
-
-  // Displays create new entry modal
-  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (<Enticons 
         style={{marginRight : 10}} 
@@ -42,13 +30,25 @@ export default ({navigation}) => {
         onPress={() => {setCreateVisible(true)}}
       />),
     });
-  }, [navigation]);
+
+    SecureStore.getItemAsync('user').then((user) => {
+      let displayName = JSON.parse(user).displayName;
+      setDisplayName(displayName);
+      SecureStore.getItemAsync('entries').then((entries) => {
+        let entriesArray = JSON.parse(entries);
+        setPassEntries(entriesArray);
+      })
+    }).catch((error)=> {
+      reportError('' + error);
+    })
+  }, []);
 
   // Skeleton code for post requests to server
+  // callbackFunction is called when POST request is successful
   const postRequest = (url, body, callbackFunc) => {
     SecureStore.getItemAsync('user').then((user) => {
-      let json = JSON.parse(user);
-      let auth = 'Bearer ' + json.token;
+      let token = JSON.parse(user).token;
+      let auth = 'Bearer ' + token;
       fetch(url, {
         method: 'POST',
         headers: {
@@ -58,15 +58,10 @@ export default ({navigation}) => {
         },
         body: JSON.stringify(body)
       }).then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json().then(json => {
-            if (response.status === 200) {
-              callbackFunc();
-            }
-          });
+        if (response.status === 200) {
+          callbackFunc();
         } else {
-          reportError('Unexpected error occured');
+          reportError('Server error');
         }
       }).catch((error) => {
         // Fetch Error

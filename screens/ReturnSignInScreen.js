@@ -8,7 +8,7 @@ export default ({navigation}) => {
   return (
     <View style={styles.returnContainer} >
         <Text style={styles.returnText}>{'Successfully Created Account!'}</Text>
-        <SubmitButton title='Return to Sign in' onPress={()=>{navigation.pop()}}/>
+        <SubmitButton containerStyle={styles.largerButton} title='Return to Sign in' onPress={()=>{navigation.pop()}}/>
     </View>
   )
 }
@@ -22,5 +22,7 @@ const styles = StyleSheet.create({
         ...Styles.fontFamily,
         fontSize : 15,
         marginBottom : 25
-    },
+    }, largerButton : {
+      width: '70%',
+    }
 });

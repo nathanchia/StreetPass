@@ -2,7 +2,8 @@ import React from 'react';
 import { Text, TouchableHighlight, StyleSheet } from 'react-native';
 import * as Styles  from '../styles/master';
 
-// Ping button for home screen
+// Ping button for PassListScreen
+// Required Props: onPress
 const PingButton = props => {
     return (
         <TouchableHighlight underlayColor='white' style={styles.buttonContainer} onPress={props.onPress}>

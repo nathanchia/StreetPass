@@ -6,6 +6,7 @@ import * as Styles from '../styles/master';
 import FullModal from './FullModal';
 import SmallModal from './SmallModal';
 
+// Displays an individual entry for the client and allows it to edit
 // Required props: onUpdate, title, text
 // Optional props: partial, deletable, onDelete, entryKey
 const EditEntry = props => {

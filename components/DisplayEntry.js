@@ -2,7 +2,8 @@ import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
 import * as Styles  from '../styles/master';
 
-// Ping button for home screen
+// Displays an individual entry of another user
+// Required props: title, text
 const DisplayEntry = props => {
     return (
         <View style={styles.entryContainer}>

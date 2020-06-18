@@ -7,7 +7,7 @@ import CustomDrawerContent from './DrawerContent';
 
 const HomeDrawer = createDrawerNavigator();
 
-// Need another regular stack for settings
+// Note: Screens not actually shown on drawer. Refer DrawerContent
 export default () => {
   return (
     <HomeDrawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} >

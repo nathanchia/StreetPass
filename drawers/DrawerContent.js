@@ -8,6 +8,7 @@ import * as Style from '../styles/master';
 export default (props) => {
   const authFunctions = useContext(AuthContext);
   
+    // All drawer content. Note that screens in the actual drawer are not rendered
     return (
       <DrawerContentScrollView
         contentContainerStyle={{flex:1}}

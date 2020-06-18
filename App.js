@@ -14,6 +14,7 @@ export default function App() {
     'RobotoSlab-Regular': require('./assets/fonts/RobotoSlab-Regular.ttf'),
   });
 
+  // Only used to know if client is logged in. Use SecureStorage for actual token
   const [userToken, setUserToken] = useState(null);
 
   const authContext = useMemo(() =>{
@@ -39,13 +40,14 @@ export default function App() {
             if (contentType && contentType.indexOf("application/json") !== -1) {
               return response.json().then(json => {
                 if (response.status === 200) {
-                  SecureStore.setItemAsync('user', JSON.stringify(json)).then((error) => {
-                    if (error) {
-                      setResponseText('' + error);
-                    } else {
-                      setUserToken(json.token);
-                    }
-                  });            
+                  let user = {token:json.token, displayName:json.displayName};
+                  SecureStore.setItemAsync('user', JSON.stringify(user)).then(
+                    SecureStore.setItemAsync('favorites', json.favorites).then(
+                      SecureStore.setItemAsync('entries', json.entries).then(() => {
+                          setUserToken(json.token);
+                      })
+                    )
+                  );            
                 } else {
                   // Invalid credentials
                   setResponseText(json.msg);
@@ -53,7 +55,7 @@ export default function App() {
               });
             } else {
               // Not JSON, most likely server error
-              setResponseText('Unexpected error occured');
+              setResponseText('Server error');
             }
           }).catch((error) => {
               setIsLoading(false);
@@ -93,7 +95,7 @@ export default function App() {
                 });
               } else {
                 // Not JSON, most likely server error
-                setResponseText('Unexpected error occured');
+                setResponseText('Server error');
               }
             }).catch((error) => {
                 setIsLoading(false);
@@ -106,13 +108,15 @@ export default function App() {
       },
       signOut: () => {
         // Delete cached user info
-        SecureStore.setItemAsync('user', '').then((error) => {
-          if (error) {
-            setResponseText('' + error);
-          } else {
-            setUserToken(null);
-          }
-        });     
+        SecureStore.setItemAsync('user', '').then(
+          SecureStore.setItemAsync('favorites', '').then(
+            SecureStore.setItemAsync('entries', '').then(() => {
+                setUserToken(null);
+            })
+          )
+        ).catch(error => {
+          //Failed to sign out
+        });      
       },
     }
   }, []);

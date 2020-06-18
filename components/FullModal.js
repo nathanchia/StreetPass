@@ -8,7 +8,7 @@ import {Keyboard} from 'react-native';
 import InfoInput from '../components/InfoInput';
 import SubmitButton from '../components/SubmitButton';
 
-// Non transparent modal used in edit 
+// Non transparent modal that covers whole screen, used in edit and create entry 
 // Required props: visible, setModalVisible, headerTitle, submitFunction, 
 // Optional props: onShow, entryKey, partial 
 const FullModal = props => {

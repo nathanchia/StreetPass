@@ -2,18 +2,18 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Enticons from 'react-native-vector-icons/Entypo';
 
-import FavouritesScreen from '../screens/FavouritesScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 import * as Styles from '../styles/master';
 
 
-const FavouritesStack = createStackNavigator();
+const FavoritesStack = createStackNavigator();
 
 export default ({ navigation }) => {
   return (
-      <FavouritesStack.Navigator>
-          <FavouritesStack.Screen 
+      <FavoritesStack.Navigator>
+          <FavoritesStack.Screen 
             name='FavScreen' 
-            component={FavouritesScreen} 
+            component={FavoritesScreen} 
             options={{
               title:'Favourites',  
               headerStyle: {
@@ -26,7 +26,7 @@ export default ({ navigation }) => {
               headerLeft: () => (<Enticons style={{marginLeft : 10}} name={'menu'} size={30} onPress={() => {navigation.openDrawer()}}/>),
             }} 
           />
-      </FavouritesStack.Navigator>
+      </FavoritesStack.Navigator>
   )
 }
 

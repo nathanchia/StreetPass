@@ -2,7 +2,9 @@ import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 import * as Styles  from '../styles/master';
 
-// Login fields (username and password)
+// Signin fields (username and password)
+// Required props: placeholder, onChangeText, value, 
+// Optional props: secure, style
 const AuthInput = props => {
     return (
         <TextInput 
