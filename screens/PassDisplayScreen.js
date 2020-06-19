@@ -122,7 +122,7 @@ export default ({ route, navigation }) => {
           // Only show header if adding as a fav
           if (isNowFav) {
             setOkTitle('Success');
-            setOkText('You have added this user to your favorites');
+            setOkText('You have added this post to your favorites');
             setShowOk(true);
           }
 
@@ -170,7 +170,7 @@ export default ({ route, navigation }) => {
       <SmallModal 
         visible={showPrompt} 
         title={'Are you sure?'} 
-        text={'You may not see this pass again'}
+        text={'You may not see this post again'}
         okCallback={()=>{
           setShowPrompt(false);
 

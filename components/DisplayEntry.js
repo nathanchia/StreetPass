@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
         ...Styles.fontFamily,
         ...Styles.entryTitleBottomMargin,
         ...Styles.entryTitle,
+        width: '100%',
     }, 
     entryText : {
         ...Styles.fontFamily,

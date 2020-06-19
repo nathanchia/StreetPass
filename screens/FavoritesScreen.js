@@ -15,7 +15,7 @@ export default ({navigation}) => {
         let favArray = JSON.parse(favorites);
         setFavorites(favArray);
         if (favArray.length <= 0) {
-          setResponseMsg('No favorite passes')
+          setResponseMsg('No favorite posts')
         }  
       });
     });

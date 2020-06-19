@@ -47,7 +47,6 @@ export default function App() {
                       // If assigned to 'none' instead, server will not filter
                       // For now setting is just a string, will be object if more params
                       AsyncStorage.setItem('settings', '3');
-                      console.log('Default Settings');
                     }
                   });
 

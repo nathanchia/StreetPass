@@ -20,7 +20,7 @@ export default (props) => {
           onPress={()=>{props.navigation.navigate('HomeTabs')}}
         />
         <DrawerItem 
-          label='Edit Profile' 
+          label='Edit Post' 
           labelStyle={{...Style.fontFamily}} 
           icon={()=><Enticons name={'pencil'} size={20}/>} 
           onPress={()=>{props.navigation.navigate('EditProfileStack')}}

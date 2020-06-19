@@ -42,6 +42,35 @@ const EditEntry = props => {
             />;
     }
 
+    let icons;
+    // Show header with delete (trashcan) option
+    if (props.deletable) {
+        icons =          
+        <View style={styles.iconContainer}> 
+            <Enticons 
+                name={'trash'} 
+                size={20} 
+                color={'black'} 
+                onPress={()=>{setDeleteVisible(true);}}
+            />
+            
+            <Enticons 
+                name={'pencil'}
+                size={20} 
+                color={'black'}
+                onPress={()=>{setEditVisible(true);}} 
+            />
+        </View>
+    } else {  // No trash option
+        icons =    
+        <Enticons 
+            name={'pencil'}
+            size={20} 
+            color={'black'}
+            onPress={()=>{setEditVisible(true);}} 
+        />
+    }
+
     return (
         <View style={styles.entryContainer}>
             <SmallModal 
@@ -60,22 +89,7 @@ const EditEntry = props => {
 
             <View style={styles.entryHeader}>
                 <Text style={styles.entryTitle}>{props.title}</Text>
-                { props.deletable &&
-                    <Enticons 
-                        style={styles.entryHeaderIconLeft} 
-                        name={'trash'} 
-                        size={20} 
-                        color={'black'} 
-                        onPress={()=>{setDeleteVisible(true);}}
-                    />
-                }
-                <Enticons 
-                    style={styles.entryHeaderIconRight} 
-                    name={'pencil'}
-                    size={20} 
-                    color={'black'}
-                    onPress={()=>{setEditVisible(true);}} 
-                />
+                {icons}
             </View>
            
             <Text style={styles.entryText}>{props.text}</Text>     
@@ -90,19 +104,18 @@ const styles = StyleSheet.create({
     entryHeader : {
         ...Styles.entryTitleBottomMargin,
         flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,   
+        width: '100%',  
+        justifyContent: 'space-between',
+    },
+    iconContainer: {
+        flexDirection: 'row', 
+        width: 65, 
+        justifyContent:'space-between', 
+        alignItems:'center'
     },
     entryTitle : {
         ...Styles.fontFamily,
         ...Styles.entryTitle,
-        flex: 10,
-    },
-    entryHeaderIconLeft : {
-        flex: 2,
-    },
-    entryHeaderIconRight : {
-        flex: 1,
     },
     entryText : {
         ...Styles.fontFamily,

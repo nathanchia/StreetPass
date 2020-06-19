@@ -15,7 +15,7 @@ export default ({ navigation }) => {
   const[responseTitle, setResponseTitle] = useState('');
   const[responseText, setResponseText] = useState('');
   const[isLoading, setIsLoading] = useState(false);
-  const[noPass, setNoPass] = useState('Ping to get passes');
+  const[noPass, setNoPass] = useState('Ping to find posts');
 
   // Shows small modal, used to relay errors/show #of passes and address
   const showResponse = (title, text) => {
@@ -79,40 +79,40 @@ export default ({ navigation }) => {
                   let numPasses = json.passes.length;
                   if (numPasses > 0) {
                     if (numPasses > 1) {
-                      showResponse('Found ' + json.passes.length + ' passes at', address);
+                      showResponse('Found ' + json.passes.length + ' posts at', address);
                     } else {
-                      showResponse('Found 1 pass at', address);
+                      showResponse('Found 1 post at', address);
                     }
                     setPasses(json.passes);
                   } else {
-                    showResponse('Found 0 passes at', address);
-                    setNoPass('Ping to get passes');
+                    showResponse('Found 0 posts at', address);
+                    setNoPass('Ping to find posts');
                     setPasses([]);
                   }
                 } else {
                   // Internal server error such as no token
                   setIsLoading(false);
                   showResponse('Error', json.msg);
-                  setNoPass('Ping to get Passes');
+                  setNoPass('Ping to find posts');
                 }
               });
             } else {
               // Not JSON, most likely server error
               setIsLoading(false);
               showResponse('Error', 'Server error');
-              setNoPass('Ping to get Passes');
+              setNoPass('Ping to find posts');
             }
           }).catch((error) => {
               // fetch error
               setIsLoading(false);
               showResponse('Error', error);
-              setNoPass('Ping to get Passes');
+              setNoPass('Ping to find posts');
           });
         });
       } catch (error) {
         setIsLoading(false);
         showResponse('Error', error);
-        setNoPass('Ping to get Passes');
+        setNoPass('Ping to find posts');
       }
     } 
   };

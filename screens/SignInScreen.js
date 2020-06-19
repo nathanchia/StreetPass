@@ -20,6 +20,12 @@ export default ({ navigation }) => {
       <View style={styles.signInContainer}>
           <SpinnerModal visible={isLoading} />
 
+          <View style={styles.titleContainer}>
+            <Text style={styles.firstTitle}>{'Geo'}</Text>
+            <Text style={styles.secondTitle}>{'POST'}</Text>
+          </View>
+          
+
           <AuthInput style={styles.removeRoundedBottom} placeholder='Username' onChangeText={setUsername} value={username}/>
           <AuthInput style={styles.removeRoundedTop} placeholder='Password' onChangeText={setPassword} value={password} secure={true}/>
           
@@ -50,6 +56,19 @@ const styles = StyleSheet.create({
     justifyContent : 'center',
     alignItems : 'center',
   }, 
+  titleContainer: {
+    flexDirection: 'row', 
+    marginBottom: 10,
+  },
+  firstTitle: {
+    ...Styles.fontFamily,
+    color: '#FF9F2E', 
+    fontSize: 20
+  },
+  secondTitle: {
+    ...Styles.fontFamily,
+    fontSize: 30,
+  },
   removeRoundedBottom : {
     borderBottomLeftRadius : 0,
     borderBottomRightRadius : 0,

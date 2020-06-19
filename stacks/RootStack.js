@@ -15,7 +15,7 @@ export default () => {
             name='PassDisplayScreen' 
             component={PassDisplayScreen}
             options={({ route }) => ({ 
-              title: route.params.passEntry.displayName + '\'s Profile',
+              title: route.params.passEntry.displayName + '\'s Post',
               headerStyle: {
                 ...Styles.backgroundColor,
               },
