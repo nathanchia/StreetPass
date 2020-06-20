@@ -20,7 +20,7 @@ export default ({ navigation }) => {
           <SpinnerModal visible={isLoading} />
 
           <View style={styles.titleContainer}>
-            <Text style={styles.firstTitle}>{'Geo'}</Text>
+            <Text style={styles.firstTitle}>{'Ping'}</Text>
             <Text style={styles.secondTitle}>{'POST'}</Text>
           </View>
           
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   firstTitle: {
     ...Styles.fontFamily,
     color: '#FF9F2E', 
-    fontSize: 20
+    fontSize: 18,
   },
   secondTitle: {
     ...Styles.fontFamily,

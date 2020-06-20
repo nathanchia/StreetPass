@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     button: {
         alignSelf: 'center',
         position: 'absolute',
-        bottom: 100,
+        bottom: 130,
         width: '70%',
     }
 });

@@ -8,7 +8,7 @@ export default () => {
   return (
     <ScrollView >
         <DisplayEntry 
-            title={'How to use GeoPost'} 
+            title={'How to use PingPost'} 
             text={
                 '1. Press the \"ping\" button on the home screen.\n' +
                 '2. Posts within the proximity of the user are retrieved and displayed.\n' +
@@ -25,7 +25,7 @@ export default () => {
                 'Hi! Thank you for using this app, my name is Nathan. I made this app as a small project ' +
                 'when I was studying Computer Science at the University of Washington. ' +
                 'The frontend was developed using React Native, and all the backend, ' +
-                'including the account authentication and the location service, were developed ' +
+                'including user accounts and location services, were developed ' +
                 'from scratch using Python and Flask. The database is managed using SQLAlchemy.' 
             }
         />

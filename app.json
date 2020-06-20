@@ -1,17 +1,23 @@
 {
   "expo": {
-    "name": "GeoPost",
-    "slug": "geo-post",
-    "platforms": ["ios", "android"],
+    "name": "PingPost",
+    "description": "Retrieve posts written by other users close to your location",
+    "slug": "ping-post",
     "version": "1.0.0",
-    "icon": "./assets/logo.png",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
+    "icon": "./assets/Logo.png",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "resizeMode": "cover",
+      "image": "./assets/Splash.png"
+    },
     "ios": {
-      "bundleIdentifier": "com.yourcompany.yourappname",
+      "bundleIdentifier": "com.nathanchia.pingpost",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.yourcompany.yourappname",
+      "package": "com.nathanchia.pingpost",
       "versionCode": 1
     }
   }

@@ -3,8 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import { AsyncStorage } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from '@use-expo/font';
+import { AppLoading } from 'expo';
 
-import LoadingScreen from './screens/LoadingScreen'
 import AuthStack from './stacks/AuthStack';
 import RootStack from './stacks/RootStack';
 import { AuthContext } from './contexts/AuthContext'
@@ -134,7 +134,7 @@ export default function App() {
   }, []);
 
   if (!fontsLoaded) {
-    return <LoadingScreen />
+    return <AppLoading />
   } else {
     return (
       <AuthContext.Provider value={authContext}>
