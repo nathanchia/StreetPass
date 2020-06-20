@@ -32,6 +32,12 @@ export default (props) => {
           onPress={()=>{props.navigation.navigate('SettingsStack')}}
         />
         <DrawerItem 
+          label='About' 
+          labelStyle={{...Style.fontFamily}} 
+          icon={()=><Enticons name={'help'} size={20}/>} 
+          onPress={()=>{props.navigation.navigate('AboutStack')}}
+        />
+        <DrawerItem 
           label='Sign Out' 
           labelStyle={{...Style.fontFamily}} 
           style={{position:'absolute', bottom:10}}

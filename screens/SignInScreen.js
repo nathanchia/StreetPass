@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
-import { StyleSheet, Text , View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import {Keyboard} from 'react-native';
+import { StyleSheet, Text , View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import { AuthContext } from '../contexts/AuthContext';
 import SubmitButton from '../components/SubmitButton';

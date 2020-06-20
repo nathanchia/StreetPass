@@ -9,7 +9,7 @@ export default ({navigation}) => {
   const [responseMsg, setResponseMsg] = useState('');
 
   // On navigate to this screen, load most recent favorites
-  React.useEffect(() => {
+  useEffect(() => {
     const loadFav = navigation.addListener('focus', () => {
       AsyncStorage.getItem('favorites').then(favorites => {
         let favArray = JSON.parse(favorites);

@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
-import {Keyboard} from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import { AuthContext } from '../contexts/AuthContext';
 import SubmitButton from '../components/SubmitButton';
@@ -24,7 +23,7 @@ export default ({navigation}) => {
           <InfoInput autoCapitalize={'none'} field='Username' onChangeText={setUsername} value={username}/>
           <InfoInput  autoCapitalize={'none'} field='Password' onChangeText={setPassword} value={password} secure={true}/>
           <InfoInput  autoCapitalize={'none'} field='Confirm Password' onChangeText={setConfirmPass} value={confirmPass} secure={true}/>
-          <InfoInput field='Display Name' onChangeText={setDisplayName} value={displayName}/>
+          <InfoInput field='Display Name' maxLength={18} onChangeText={setDisplayName} value={displayName}/>
           <Text style={styles.responseText}>{responseText}</Text>
           <SubmitButton 
             title='Create Account' 

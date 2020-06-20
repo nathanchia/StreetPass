@@ -38,6 +38,6 @@ export const entryTitleBottomMargin = {
 export const entryTitle = {
     textDecorationLine: 'underline',
     fontSize: 20,
-    width: '65%'
+    width: '100%',
 }
 

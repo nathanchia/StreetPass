@@ -7,69 +7,10 @@ import FullModal from './FullModal';
 import SmallModal from './SmallModal';
 
 // Displays an individual entry for the client and allows it to edit
-// Required props: onUpdate, title, text
-// Optional props: partial, deletable, onDelete, entryKey
+// Required props: onUpdate, title, text, onDelete, entryKey
 const EditEntry = props => {
     const [deleteVisible, setDeleteVisible] = useState(false);
     const [editVisible, setEditVisible] = useState(false);
-
-    let editModal;
-    // Full modal with title and text fields
-    if (!props.partial) {
-        editModal = 
-            <FullModal 
-                visible={editVisible} 
-                setModalVisible={setEditVisible} 
-                headerTitle={'Edit Entry'} 
-                onShow={(setTitle, setText) => {
-                    setTitle(props.title);
-                    setText(props.text);
-                }}
-                submitFunction={props.onUpdate} 
-                entryKey={props.entryKey} 
-            />;
-    } else {  // Only edit display name
-        editModal = 
-            <FullModal 
-                partial={true}
-                visible={editVisible} 
-                setModalVisible={setEditVisible} 
-                headerTitle={'Change Display Name'} 
-                onShow={(setTitle, setText) => {
-                    setText(props.text);
-                }}
-                submitFunction={props.onUpdate} 
-            />;
-    }
-
-    let icons;
-    // Show header with delete (trashcan) option
-    if (props.deletable) {
-        icons =          
-        <View style={styles.iconContainer}> 
-            <Enticons 
-                name={'trash'} 
-                size={20} 
-                color={'black'} 
-                onPress={()=>{setDeleteVisible(true);}}
-            />
-            
-            <Enticons 
-                name={'pencil'}
-                size={20} 
-                color={'black'}
-                onPress={()=>{setEditVisible(true);}} 
-            />
-        </View>
-    } else {  // No trash option
-        icons =    
-        <Enticons 
-            name={'pencil'}
-            size={20} 
-            color={'black'}
-            onPress={()=>{setEditVisible(true);}} 
-        />
-    }
 
     return (
         <View style={styles.entryContainer}>
@@ -85,11 +26,35 @@ const EditEntry = props => {
                 noCallback={() => {setDeleteVisible(false);}}
             />
   
-            {editModal}
+            <FullModal 
+                visible={editVisible} 
+                setModalVisible={setEditVisible} 
+                headerTitle={'Edit Entry'} 
+                onShow={(setTitle, setText) => {
+                    setTitle(props.title);
+                    setText(props.text);
+                }}
+                submitFunction={props.onUpdate} 
+                entryKey={props.entryKey} 
+            />
 
             <View style={styles.entryHeader}>
                 <Text style={styles.entryTitle}>{props.title}</Text>
-                {icons}
+                <View style={styles.iconContainer}> 
+                    <Enticons 
+                        name={'trash'} 
+                        size={20} 
+                        color={'black'} 
+                        onPress={()=>{setDeleteVisible(true);}}
+                    />
+                    
+                    <Enticons 
+                        name={'pencil'}
+                        size={20} 
+                        color={'black'}
+                        onPress={()=>{setEditVisible(true);}} 
+                    />
+                </View>
             </View>
            
             <Text style={styles.entryText}>{props.text}</Text>     
@@ -116,6 +81,7 @@ const styles = StyleSheet.create({
     entryTitle : {
         ...Styles.fontFamily,
         ...Styles.entryTitle,
+        width: '65%',
     },
     entryText : {
         ...Styles.fontFamily,

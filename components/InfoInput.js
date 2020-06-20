@@ -5,12 +5,12 @@ import * as Styles from '../styles/master';
 
 // Used for user input, at create new account and new/edit entry
 // Required Props: onChangeText, value, field (title), 
-// Optional Props: containerStyle, autoCapitalize, secure, multi
+// Optional Props: containerStyle, autoCapitalize, secure, multi, maxLength
 const InfoInput = props => {
     const [inputHeight, setInputHeight] = useState(0);
 
     return (
-        <View style={{...styles.infoInputContainer, ...props.containerStyle, height: Math.max(35, inputHeight)}}>
+        <View style={{...styles.infoInputContainer, height: Math.max(35, inputHeight), ...props.containerStyle,}}>
             <Text style={{fontFamily: 'RobotoSlab-Regular'}}>{props.field}</Text>
             <TextInput 
                 style={styles.infoInput}
@@ -19,6 +19,7 @@ const InfoInput = props => {
                 autoCapitalize={props.autoCapitalize}
                 secureTextEntry={props.secure}
                 multiline={props.multi} 
+                maxLength={props.maxLength}
                 onContentSizeChange={(event) => {
                     let newHeight = event.nativeEvent.contentSize.height;
                     // 140 is arbitrary may change in future

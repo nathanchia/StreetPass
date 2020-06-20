@@ -5,6 +5,7 @@ import HomeTabs from '../tabs/HomeTabs';
 import EditProfileStack from '../stacks/EditProfileStack';
 import CustomDrawerContent from './DrawerContent';
 import SettingsStack from '../stacks/SettingsStack';
+import AboutStack from '../stacks/AboutStack';
 
 const HomeDrawer = createDrawerNavigator();
 
@@ -15,6 +16,7 @@ export default () => {
         <HomeDrawer.Screen name='HomeTabs' component={HomeTabs} />
         <HomeDrawer.Screen name='EditProfileStack' component={EditProfileStack} />
         <HomeDrawer.Screen name='SettingsStack' component={SettingsStack} />
+        <HomeDrawer.Screen name='AboutStack' component={AboutStack} />
     </HomeDrawer.Navigator> 
   )
 }

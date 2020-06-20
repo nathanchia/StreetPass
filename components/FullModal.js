@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import {  Modal, View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import {  Modal, View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as Styles  from '../styles/master';
 import { Dimensions } from "react-native";
-import {Keyboard} from 'react-native';
 
 import InfoInput from '../components/InfoInput';
 import SubmitButton from '../components/SubmitButton';
 
 // Non transparent modal that covers whole screen, used in edit and create entry 
 // Required props: visible, setModalVisible, headerTitle, submitFunction, 
-// Optional props: onShow, entryKey, partial 
+// Optional props: onShow, entryKey 
 const FullModal = props => {
     const [newTitle, setNewTitle] = useState('');
     const [newValue , setNewValue] = useState('');
@@ -18,40 +17,6 @@ const FullModal = props => {
 
     // Ensures Submit button is always at the right abs pos
     const screenHeight = Math.round(Dimensions.get('window').height);
-
-    // Only allow title editing if not display name
-    let titleInput;
-    if (!props.partial) {
-        titleInput =
-            <InfoInput 
-                containerStyle={{width: '100%'}} 
-                field={'Title'}  
-                value={newTitle}
-                onChangeText={setNewTitle} 
-            />;
-    }
-
-    // Hide 'text' header if only editing display name
-    let textInput;
-    if (!props.partial) {
-        textInput =
-            <InfoInput 
-                containerStyle={{width: '100%'}} 
-                field={'Text'} 
-                value={newValue} 
-                onChangeText={setNewValue}
-                multi={true}
-            />;
-    } else {
-        textInput =
-        <InfoInput 
-            containerStyle={{width: '100%'}} 
-            field={''} 
-            value={newValue} 
-            onChangeText={setNewValue}
-            multi={false}
-        />;
-    }
 
     // onShow loads the previous entries to allow easy editing
     return (
@@ -76,9 +41,20 @@ const FullModal = props => {
                         }} />
                     </View>
                 
-                    {titleInput}
+                    <InfoInput 
+                        containerStyle={{width: '100%'}} 
+                        field={'Title'}  
+                        value={newTitle}
+                        onChangeText={setNewTitle} 
+                    />
 
-                    {textInput}
+                    <InfoInput 
+                        containerStyle={{width: '100%'}} 
+                        field={'Text'} 
+                        value={newValue} 
+                        onChangeText={setNewValue}
+                        multi={true}
+                    />  
 
                     <Text style={styles.validEntry}>{validEntry}</Text>
 
@@ -86,29 +62,16 @@ const FullModal = props => {
                         containerStyle={styles.saveButton} 
                         title={'Save Changes'}
                         onPress={() => {
-                            if (!props.partial) {
-                                if (newTitle && newValue) {
-                                    //props.entryKey is optional and provided for removal of entry
-                                    props.submitFunction(newTitle, newValue, props.entryKey);
-                                    setNewTitle('');
-                                    setNewValue('');
-                                    setValidEntry('');
-                                    props.setModalVisible(false);
-                                } else {
-                                    setValidEntry('Both fields cannot be empty');
-                                }
+                            if (newTitle && newValue) {
+                                //props.entryKey is optional and provided for editing of entry
+                                props.submitFunction(newTitle, newValue, props.entryKey);
+                                setNewTitle('');
+                                setNewValue('');
+                                setValidEntry('');
+                                props.setModalVisible(false);
                             } else {
-                                if (newValue) {
-                                    // Just the display name
-                                    props.submitFunction(newValue);
-                                    setNewTitle('');
-                                    setNewValue('');
-                                    setValidEntry('');
-                                    props.setModalVisible(false);
-                                } else {
-                                    setValidEntry('Display name cannot be empty');
-                                }
-                            }
+                                setValidEntry('Both fields cannot be empty');
+                            } 
                         }}
                     />
                 </View>

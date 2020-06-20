@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View, AsyncStorage } from 'react-native';
+import { StyleSheet, ScrollView, View, AsyncStorage, Text } from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
 import * as SecureStore from 'expo-secure-store';
 
 import EditEntry from '../components/EditEntry';
 import FullModal from '../components/FullModal';
 import SmallModal from '../components/SmallModal';
+import * as Styles from '../styles/master';
 
 export default ({navigation}) => {
-  const [displayName, setDisplayName] = useState('');
   const [passEntries, setPassEntries] = useState([]);
   const [createVisible, setCreateVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
@@ -31,13 +31,9 @@ export default ({navigation}) => {
       />),
     });
 
-    SecureStore.getItemAsync('user').then((user) => {
-      let displayName = JSON.parse(user).displayName;
-      setDisplayName(displayName);
-      AsyncStorage.getItem('entries').then((entries) => {
+    AsyncStorage.getItem('entries').then((entries) => {
         let entriesArray = JSON.parse(entries);
         setPassEntries(entriesArray);
-      })
     });
   }, []);
 
@@ -69,12 +65,6 @@ export default ({navigation}) => {
     });
   };
 
-  const updateDisplayName = (newDisplayName) => {
-    postRequest('https://nkchia.pythonanywhere.com/changename', {newName: newDisplayName}, () => {
-      setDisplayName(newDisplayName);
-    })
-  }
-
   // Entries are in the form {key: newKey ,title: newTitle, text: newValue}
   const newEntry = (newTitle, newValue) => {
     let newKey = new Date().getTime() + newTitle;
@@ -105,6 +95,28 @@ export default ({navigation}) => {
     })
   };
 
+  let entryComponent;
+  if (passEntries.length > 0) {
+    entryComponent =
+      <ScrollView>
+        {passEntries.map((entry) => 
+          <EditEntry 
+            onDelete={removeEntry} 
+            onUpdate={updateEntry}
+            title={entry.title} 
+            text={entry.text} 
+            key={entry.key}
+            entryKey={entry.key}
+          />
+        )}
+      </ScrollView>;
+  } else {
+    entryComponent = 
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>{'Empty post'}</Text>
+      </View>;
+  }
+
   return (
     <View style={styles.editContainer} >
       <FullModal 
@@ -123,20 +135,8 @@ export default ({navigation}) => {
         }}
       />
 
-      <ScrollView>
-        <EditEntry key={'displayName'} partial={true} onUpdate={updateDisplayName} title={'Display name'} text={displayName}/>
-        {passEntries.map((entry) => 
-          <EditEntry 
-            deletable={true} 
-            onDelete={removeEntry} 
-            onUpdate={updateEntry}
-            title={entry.title} 
-            text={entry.text} 
-            key={entry.key}
-            entryKey={entry.key}
-          />
-        )}
-      </ScrollView>
+      {entryComponent}
+     
     </View>
   )
 }
@@ -145,4 +145,12 @@ const styles = StyleSheet.create({
   editContainer : {
     height: '100%',
   }, 
+  emptyContainer: {
+    flex: 1,
+    justifyContent:'center',
+  },  
+  emptyText: {
+    ...Styles.fontFamily,
+    alignSelf: 'center',
+  }
 });
