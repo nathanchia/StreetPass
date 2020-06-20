@@ -7,6 +7,7 @@ import * as SecureStore from 'expo-secure-store';
 import SubmitButton from '../components/SubmitButton';
 import SmallModal from '../components/SmallModal';
 import InfoInput from '../components/InfoInput';
+import SpinnerModal from '../components/SpinnerModal';
 import * as Styles from '../styles/master';
 
 export default SettingsScreen = ({navigation}) => {
@@ -16,6 +17,7 @@ export default SettingsScreen = ({navigation}) => {
     const [modalTitle, setModalTitle] = useState('');
     const [modalText, setModalText] = useState('');
     const [displayName, setDisplayName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -56,6 +58,8 @@ export default SettingsScreen = ({navigation}) => {
         let oldDisplayName = json.displayName;
         // User has a new display name, post to server
         if (oldDisplayName != displayName) {
+            setIsLoading(true);
+
             let token = json.token;
             let auth = 'Bearer ' + token;
             fetch('https://nkchia.pythonanywhere.com/changename', {
@@ -69,6 +73,7 @@ export default SettingsScreen = ({navigation}) => {
                     newName: displayName
                 })
             }).then((response) => {
+                setIsLoading(false);
                 if (response.status === 200) {
                     json.displayName = displayName;
                     SecureStore.setItemAsync('user', JSON.stringify(json));
@@ -82,6 +87,7 @@ export default SettingsScreen = ({navigation}) => {
                 }
             }).catch((error) => {
                 // Fetch Error
+                setIsLoading(false);
                 setModalTitle('Error');
                 setModalText('' + error);
                 setShowModal(true);
@@ -96,6 +102,8 @@ export default SettingsScreen = ({navigation}) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={{...styles.settingsContainer, height: screenHeight}}>
+                <SpinnerModal visible={isLoading} />
+
                 <SmallModal 
                     visible={showModal} 
                     title={modalTitle} 

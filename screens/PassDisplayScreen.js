@@ -45,6 +45,7 @@ export default ({ route, navigation }) => {
             name={'heart-outlined'} 
             size={30} 
             onPress={()=>{
+              setIsLoading(true);
               AsyncStorage.getItem('favorites').then((favorites)=>{
                 let favArray = JSON.parse(favorites);
                 favArray.push({key: route.params.passEntry.key, displayName: route.params.passEntry.displayName});
@@ -118,6 +119,8 @@ export default ({ route, navigation }) => {
           newFav:newFav
         })
       }).then((response) => {
+        setIsLoading(false);
+
         if (response.status === 200) {
           // Only show header if adding as a fav
           if (isNowFav) {
@@ -135,6 +138,7 @@ export default ({ route, navigation }) => {
         }
       }).catch((error) => {
           // fetch error
+          setIsLoading(false);
           setOkTitle('Error');
           setOkText('' + error);
           setShowOk(true);
@@ -173,7 +177,7 @@ export default ({ route, navigation }) => {
         text={'You may not see this post again'}
         okCallback={()=>{
           setShowPrompt(false);
-
+          setIsLoading(true);
           AsyncStorage.getItem('favorites').then((favorites)=>{
             let rmKey = route.params.passEntry.key;
             let favArray = JSON.parse(favorites);

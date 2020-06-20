@@ -4,6 +4,7 @@ import Enticons from 'react-native-vector-icons/Entypo';
 import * as SecureStore from 'expo-secure-store';
 
 import EditEntry from '../components/EditEntry';
+import SpinnerModal from '../components/SpinnerModal';
 import FullModal from '../components/FullModal';
 import SmallModal from '../components/SmallModal';
 import * as Styles from '../styles/master';
@@ -13,6 +14,7 @@ export default ({navigation}) => {
   const [createVisible, setCreateVisible] = useState(false);
   const [errorVisible, setErrorVisible] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Sets error modal to visible and assigns error msg
   const reportError = (error) => {
@@ -41,6 +43,8 @@ export default ({navigation}) => {
   // callbackFunction is called when POST request is successful
   // ^ usually used to update current state visually
   const postRequest = (url, body, callbackFunc) => {
+    setIsLoading(true);
+
     SecureStore.getItemAsync('user').then((user) => {
       let token = JSON.parse(user).token;
       let auth = 'Bearer ' + token;
@@ -53,6 +57,7 @@ export default ({navigation}) => {
         },
         body: JSON.stringify(body)
       }).then((response) => {
+        setIsLoading(false);
         if (response.status === 200) {
           callbackFunc();
         } else {
@@ -60,6 +65,7 @@ export default ({navigation}) => {
         }
       }).catch((error) => {
         // Fetch Error
+        setIsLoading(false);
         reportError(''+ error);
       });
     });
@@ -119,6 +125,7 @@ export default ({navigation}) => {
 
   return (
     <View style={styles.editContainer} >
+      <SpinnerModal visible={isLoading}/>
       <FullModal 
         visible={createVisible} 
         setModalVisible={setCreateVisible} 
