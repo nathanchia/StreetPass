@@ -105,7 +105,7 @@ export default ({navigation}) => {
   } else {
     entryComponent = 
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>{'Empty post'}</Text>
+        <Text style={styles.emptyText}>{'Empty card'}</Text>
       </View>;
   }
 

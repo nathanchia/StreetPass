@@ -8,12 +8,12 @@ export default () => {
   return (
     <ScrollView >
         <DisplayEntry 
-            title={'How to use PingPost'} 
+            title={'How to use CloCards'} 
             text={
                 '1. Press the \"ping\" button on the home screen.\n' +
-                '2. Posts within the proximity of the user are retrieved and displayed.\n' +
-                '3. The user may then view these posts, and if so chooses, favorite them to be saved for the future.\n' +
-                '4. At the same time, the user\'s own post is registered at the current location so other users may find it.\n'
+                '2. Cards in the proximity of the user are retrieved and displayed.\n' +
+                '3. The user may then view these cards, and if so chooses, favorite them to be saved for the future.\n' +
+                '4. At the same time, the user\'s own card is registered at the current location so other users may find it.\n'
             }
         />
 

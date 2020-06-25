@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "PingPost",
-    "description": "Retrieve posts written by other users close to your location",
-    "slug": "ping-post",
+    "name": "CloCards",
+    "description": "Retrieve cards written by other users close to your location",
+    "slug": "clo-cards",
     "version": "1.0.0",
     "platforms": ["ios", "android"],
     "orientation": "portrait",
@@ -13,12 +13,13 @@
       "image": "./assets/Splash.png"
     },
     "ios": {
-      "bundleIdentifier": "com.nathanchia.pingpost",
+      "bundleIdentifier": "com.nathanchia.clocards",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.nathanchia.pingpost",
-      "versionCode": 1
+      "package": "com.nathanchia.clocards",
+      "versionCode": 1,
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"]
     }
   }
 }

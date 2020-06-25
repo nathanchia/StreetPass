@@ -115,13 +115,6 @@ export default ({ route, navigation }) => {
       setIsLoading,
       reportError,
       () => {
-        // Only show header if adding as a fav
-        if (isNowFav) {
-          setOkTitle('Success');
-          setOkText('You have added this post to your favorites');
-          setShowOk(true);
-        }
-
         setHeader(isNowFav);
         AsyncStorage.setItem('favorites', newFav);
       }
@@ -156,7 +149,7 @@ export default ({ route, navigation }) => {
       <SmallModal 
         visible={showPrompt} 
         title={'Are you sure?'} 
-        text={'You may not see this post again'}
+        text={'You may not see this card again'}
         okCallback={()=>{
           setShowPrompt(false);
           setIsLoading(true);

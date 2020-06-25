@@ -15,7 +15,7 @@ export default ({navigation}) => {
         let favArray = JSON.parse(favorites);
         setFavorites(favArray);
         if (favArray.length <= 0) {
-          setResponseMsg('No favorite posts')
+          setResponseMsg('No favorited cards')
         }  
       });
     });
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     alignSelf : "center",
-    width: '80%', 
+    width: '85%', 
     marginTop: '3%',
   },
   noFav : {

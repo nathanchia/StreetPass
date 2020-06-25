@@ -14,7 +14,7 @@ export default ({navigation}) => {
             name='EditProfileScreen' 
             component={EditProfileScreen} 
             options={{
-              title:'Edit your post',  
+              title:'Edit your card',  
               headerStyle: {
                 ...Styles.backgroundColor,
               },

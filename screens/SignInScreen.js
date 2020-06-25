@@ -20,8 +20,8 @@ export default ({ navigation }) => {
           <SpinnerModal visible={isLoading} />
 
           <View style={styles.titleContainer}>
-            <Text style={styles.firstTitle}>{'Ping'}</Text>
-            <Text style={styles.secondTitle}>{'POST'}</Text>
+            <Text style={styles.firstTitle}>{'C L O '}</Text>
+            <Text style={styles.secondTitle}>{' / Cards'}</Text>
           </View>
           
 
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent : 'center',
     alignItems : 'center',
+    backgroundColor:'white'
   }, 
   titleContainer: {
     flexDirection: 'row', 
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   firstTitle: {
     ...Styles.fontFamily,
     color: '#FF9F2E', 
-    fontSize: 18,
+    fontSize: 20,
   },
   secondTitle: {
     ...Styles.fontFamily,

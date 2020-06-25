@@ -20,7 +20,7 @@ export default (props) => {
           onPress={()=>{props.navigation.navigate('HomeTabs')}}
         />
         <DrawerItem 
-          label='Edit Post' 
+          label='Edit your card' 
           labelStyle={{...Style.fontFamily}} 
           icon={()=><Enticons name={'pencil'} size={20}/>} 
           onPress={()=>{props.navigation.navigate('EditProfileStack')}}
@@ -40,7 +40,7 @@ export default (props) => {
         <DrawerItem 
           label='Sign Out' 
           labelStyle={{...Style.fontFamily}} 
-          style={{position:'absolute', bottom:10}}
+          style={{position:'absolute', bottom:10, width:'92%'}}
           icon={()=><Enticons name={'log-out'} size={20}/>} 
           onPress={()=>{authFunctions.signOut()}}
         />

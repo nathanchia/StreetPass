@@ -14,7 +14,7 @@ export default ({ navigation }) => {
         name='PassListScreen' 
         component={PassListScreen} 
         options={{
-          title:'Posts',  
+          title:'Cards',  
           headerStyle: {
             ...Styles.backgroundColor,
           },

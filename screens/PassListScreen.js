@@ -10,12 +10,12 @@ import SpinnerModal from '../components/SpinnerModal';
 import PostReq from '../contexts/PostReq';
 
 export default ({ navigation }) => {
-  const[passes, setPasses] = useState([]);
+  const[passes, setPasses] = useState([{key:1, displayName:'Ethan', distance:'1.8'}, {key:2, displayName:'Nathan Chia', distance:'4.7'}, {key:3, displayName:'Chloe', distance:'7.1'}, {key:4, displayName:'Sandals the cat', distance:'7.3'}]);
   const[responseVisible, setResponseVisible] = useState(false);
   const[responseTitle, setResponseTitle] = useState('');
   const[responseText, setResponseText] = useState('');
   const[isLoading, setIsLoading] = useState(false);
-  const[noPass, setNoPass] = useState('Ping to find posts');
+  const[noPass, setNoPass] = useState('Ping to find cards');
 
   // Shows small modal, used to relay errors/show #of passes and address
   const showResponse = (title, text) => {
@@ -26,7 +26,7 @@ export default ({ navigation }) => {
 
   const reportError = (error) => {
     showResponse('Error', error);
-    setNoPass('Ping to find posts');
+    setNoPass('Ping to find cards');
   } 
 
   // Ping function
@@ -67,14 +67,14 @@ export default ({ navigation }) => {
               let numPasses = json.passes.length;
               if (numPasses > 0) {
                 if (numPasses > 1) {
-                  showResponse('Found ' + json.passes.length + ' posts at', address);
+                  showResponse('Found ' + json.passes.length + ' cards at', address);
                 } else {
-                  showResponse('Found 1 post at', address);
+                  showResponse('Found 1 card at', address);
                 }
                 setPasses(json.passes);
               } else {
-                showResponse('Found 0 posts at', address);
-                setNoPass('Ping to find posts');
+                showResponse('Found 0 cards at', address);
+                setNoPass('Ping to find cards');
                 setPasses([]);
               }
             });
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   listContainer : {
     alignSelf : "center",
-    width: '80%', 
+    width: '85%', 
     marginTop: '3%',
   },
   noPass : {
