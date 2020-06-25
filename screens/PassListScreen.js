@@ -10,7 +10,7 @@ import SpinnerModal from '../components/SpinnerModal';
 import PostReq from '../contexts/PostReq';
 
 export default ({ navigation }) => {
-  const[passes, setPasses] = useState([{key:1, displayName:'Ethan', distance:'1.8'}, {key:2, displayName:'Nathan Chia', distance:'4.7'}, {key:3, displayName:'Chloe', distance:'7.1'}, {key:4, displayName:'Sandals the cat', distance:'7.3'}]);
+  const[passes, setPasses] = useState([]);
   const[responseVisible, setResponseVisible] = useState(false);
   const[responseTitle, setResponseTitle] = useState('');
   const[responseText, setResponseText] = useState('');
