@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, FlatList, Text, AsyncStorage} from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
 import PassEntry from '../components/PassEntry';
@@ -8,6 +7,7 @@ import PingButton from '../components/PingButton';
 import SmallModal from '../components/SmallModal';
 import * as Styles from '../styles/master';
 import SpinnerModal from '../components/SpinnerModal';
+import PostReq from '../contexts/PostReq';
 
 export default ({ navigation }) => {
   const[passes, setPasses] = useState([]);
@@ -24,13 +24,17 @@ export default ({ navigation }) => {
     setResponseVisible(true);
   }
 
+  const reportError = (error) => {
+    showResponse('Error', error);
+    setNoPass('Ping to find posts');
+  } 
+
   // Ping function
   async function ping() {
     let { status } = await Location.requestPermissionsAsync();
     if (status === 'granted') {
       // Clear 'Empty list' statement
       setNoPass('');
-
       setIsLoading(true);
   
       try {
@@ -53,66 +57,32 @@ export default ({ navigation }) => {
           address += locationArray.isoCountryCode;
         }
 
-        SecureStore.getItemAsync('user').then((user) => {
-          let token = JSON.parse(user).token;
-          let auth = 'Bearer ' + token;
-
-          fetch('https://nkchia.pythonanywhere.com/ping', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: auth,
-            },
-            body: JSON.stringify({
-              maxDistance: maxDistance,
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-            })
-          }).then((response) => {
-            setIsLoading(false);
-
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-              return response.json().then(json => {
-                if (response.status === 200) {
-                  let numPasses = json.passes.length;
-                  if (numPasses > 0) {
-                    if (numPasses > 1) {
-                      showResponse('Found ' + json.passes.length + ' posts at', address);
-                    } else {
-                      showResponse('Found 1 post at', address);
-                    }
-                    setPasses(json.passes);
-                  } else {
-                    showResponse('Found 0 posts at', address);
-                    setNoPass('Ping to find posts');
-                    setPasses([]);
-                  }
+        PostReq(
+          'https://nkchia.pythonanywhere.com/ping', 
+          {maxDistance: maxDistance, latitude: coords.latitude, longitude: coords.longitude},
+          setIsLoading,
+          reportError,
+          (response) => {
+            return response.json().then(json => {
+              let numPasses = json.passes.length;
+              if (numPasses > 0) {
+                if (numPasses > 1) {
+                  showResponse('Found ' + json.passes.length + ' posts at', address);
                 } else {
-                  // Internal server error such as no token
-                  setIsLoading(false);
-                  showResponse('Error', json.msg);
-                  setNoPass('Ping to find posts');
+                  showResponse('Found 1 post at', address);
                 }
-              });
-            } else {
-              // Not JSON, most likely server error
-              setIsLoading(false);
-              showResponse('Error', 'Server error');
-              setNoPass('Ping to find posts');
-            }
-          }).catch((error) => {
-              // fetch error
-              setIsLoading(false);
-              showResponse('Error', error);
-              setNoPass('Ping to find posts');
-          });
-        });
+                setPasses(json.passes);
+              } else {
+                showResponse('Found 0 posts at', address);
+                setNoPass('Ping to find posts');
+                setPasses([]);
+              }
+            });
+          }
+        );
       } catch (error) {
         setIsLoading(false);
-        showResponse('Error', error);
-        setNoPass('Ping to find posts');
+        reportError(error);
       }
     } 
   };

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View, AsyncStorage, Text } from 'react-native';
 import Enticons from 'react-native-vector-icons/Entypo';
-import * as SecureStore from 'expo-secure-store';
 
 import EditEntry from '../components/EditEntry';
 import SpinnerModal from '../components/SpinnerModal';
 import FullModal from '../components/FullModal';
 import SmallModal from '../components/SmallModal';
 import * as Styles from '../styles/master';
+import PostReq from '../contexts/PostReq';
 
 export default ({navigation}) => {
   const [passEntries, setPassEntries] = useState([]);
@@ -39,46 +39,20 @@ export default ({navigation}) => {
     });
   }, []);
 
-  // Skeleton code for post requests to server
-  // callbackFunction is called when POST request is successful
-  // ^ usually used to update current state visually
-  const postRequest = (url, body, callbackFunc) => {
-    setIsLoading(true);
-
-    SecureStore.getItemAsync('user').then((user) => {
-      let token = JSON.parse(user).token;
-      let auth = 'Bearer ' + token;
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: auth,
-        },
-        body: JSON.stringify(body)
-      }).then((response) => {
-        setIsLoading(false);
-        if (response.status === 200) {
-          callbackFunc();
-        } else {
-          reportError('Server error');
-        }
-      }).catch((error) => {
-        // Fetch Error
-        setIsLoading(false);
-        reportError(''+ error);
-      });
-    });
-  };
-
   // Entries are in the form {key: newKey ,title: newTitle, text: newValue}
   const newEntry = (newTitle, newValue) => {
     let newKey = new Date().getTime() + newTitle;
     let newEntries = [...passEntries, {key: newKey ,title: newTitle, text: newValue}];
 
-    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
-      setPassEntries(newEntries);
-    })
+    PostReq(
+      'https://nkchia.pythonanywhere.com/updateentries', 
+      {newEntries: JSON.stringify(newEntries)}, 
+      setIsLoading,
+      reportError,
+      () => {
+        setPassEntries(newEntries);
+      }
+    ); 
   };
 
   const updateEntry = (newTitle, newText, targetKey) => {
@@ -89,16 +63,28 @@ export default ({navigation}) => {
       ...passEntries.slice(index + 1)
     ];
 
-    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
-      setPassEntries(newEntries);
-    })
+    PostReq(
+      'https://nkchia.pythonanywhere.com/updateentries', 
+      {newEntries: JSON.stringify(newEntries)}, 
+      setIsLoading,
+      reportError,
+      () => {
+        setPassEntries(newEntries);
+      }
+    );
   };
 
   const removeEntry = (targetKey) => {
     let newEntries = passEntries.filter((entry) => entry.key !== targetKey);
-    postRequest('https://nkchia.pythonanywhere.com/updateentries', {newEntries: JSON.stringify(newEntries)}, () => {
-      setPassEntries(newEntries);
-    })
+
+    PostReq(
+      'https://nkchia.pythonanywhere.com/updateentries', 
+      {newEntries: JSON.stringify(newEntries)}, 
+      setIsLoading,
+      reportError,
+      () => {
+        setPassEntries(newEntries);
+      });
   };
 
   let entryComponent;

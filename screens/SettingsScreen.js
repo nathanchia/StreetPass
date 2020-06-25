@@ -9,6 +9,7 @@ import SmallModal from '../components/SmallModal';
 import InfoInput from '../components/InfoInput';
 import SpinnerModal from '../components/SpinnerModal';
 import * as Styles from '../styles/master';
+import PostReq from '../contexts/PostReq';
 
 export default SettingsScreen = ({navigation}) => {
     const [isEnabled, setIsEnabled] = useState(false);
@@ -45,6 +46,12 @@ export default SettingsScreen = ({navigation}) => {
         setIsEnabled(previousState => !previousState);
     }
   
+    const reportError = (error) => {
+        setModalTitle('Error');
+        setModalText('' + error);
+        setShowModal(true);
+    }
+
     async function submitChanges() {
         // Local settings for max distance
         if (isEnabled) {
@@ -58,40 +65,19 @@ export default SettingsScreen = ({navigation}) => {
         let oldDisplayName = json.displayName;
         // User has a new display name, post to server
         if (oldDisplayName != displayName) {
-            setIsLoading(true);
-
-            let token = json.token;
-            let auth = 'Bearer ' + token;
-            fetch('https://nkchia.pythonanywhere.com/changename', {
-                method: 'POST',
-                headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: auth,
-                },
-                body: JSON.stringify({
-                    newName: displayName
-                })
-            }).then((response) => {
-                setIsLoading(false);
-                if (response.status === 200) {
+            PostReq(
+                'https://nkchia.pythonanywhere.com/changename',
+                {newName: displayName},
+                setIsLoading,
+                reportError,
+                () => {
                     json.displayName = displayName;
                     SecureStore.setItemAsync('user', JSON.stringify(json));
                     setModalTitle('Success');
                     setModalText('Settings have been saved');
                     setShowModal(true);
-                } else {
-                    setModalTitle('Error');
-                    setModalText('Servor error');
-                    setShowModal(true);
                 }
-            }).catch((error) => {
-                // Fetch Error
-                setIsLoading(false);
-                setModalTitle('Error');
-                setModalText('' + error);
-                setShowModal(true);
-            });
+            );
         } else {
             setModalTitle('Success');
             setModalText('Settings have been saved');

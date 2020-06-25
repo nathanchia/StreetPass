@@ -7,6 +7,7 @@ import DisplayEntry from '../components/DisplayEntry';
 import * as Styles from '../styles/master';
 import SpinnerModal from '../components/SpinnerModal';
 import SmallModal from '../components/SmallModal';
+import PostReq from '../contexts/PostReq';
 
 export default ({ route, navigation }) => {
   const[entries, setEntries] = useState([]);
@@ -59,12 +60,12 @@ export default ({ route, navigation }) => {
     }
   }
 
-  // On navigate, get the entries of the pass and whether pass is already favorited or not
+  // On navigate, GET the entries of the pass and whether pass is already favorited or not
   useEffect(()=> {
-    SecureStore.getItemAsync('user').then((user) => {
-      let targetId = route.params.passEntry.key;
-      let url = 'https://nkchia.pythonanywhere.com/getpass?userid=' + targetId;
+    let targetId = route.params.passEntry.key;
+    let url = 'https://nkchia.pythonanywhere.com/getpass?userid=' + targetId;
 
+    SecureStore.getItemAsync('user').then((user) => {
       let token = JSON.parse(user).token;
       let auth = 'Bearer ' + token;
       fetch(url, {
@@ -74,24 +75,20 @@ export default ({ route, navigation }) => {
           Authorization: auth,
         }
       }).then((response) => {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
+        setIsLoading(false);
+        if (response.status === 200) {
           return response.json().then(json => {
-            if (response.status === 200) {
-              setIsLoading(false);
+            setHeader(json.isFav);
 
-              setHeader(json.isFav);
-
-              let entriesArray = JSON.parse(json.entries);
-              if (entriesArray.length <= 0) {
-                setResponseMsg('This user has nothing to say');
-              }
-              setEntries(entriesArray);
+            let entriesArray = JSON.parse(json.entries);
+            if (entriesArray.length <= 0) {
+              setResponseMsg('This user has nothing to say');
             }
+
+            setEntries(entriesArray);
           });
         } else {
-            setIsLoading(false);
-            setResponseMsg('Server error');
+          setResponseMsg('Server error');
         }
       }).catch((error) => {
         // Fetch Error
@@ -101,49 +98,34 @@ export default ({ route, navigation }) => {
     });
   },[])
       
+
+  const reportError = (error) => {
+    setOkTitle('Error');
+    setOkText('' + error);
+    setShowOk(true);
+  }
+
   // Fav/Unfav function that takes STRING newFav in the form '[{key: 1, displayName: 'test'}]
   // isNowFav is a boolean. If true, displays smallModal after successful POST
   // Changes header after POST as well
   const favHandler = (newFav, isNowFav) => {
-    SecureStore.getItemAsync('user').then((user) => {
-      let token = JSON.parse(user).token;
-      let auth = 'Bearer ' + token;
-      fetch('https://nkchia.pythonanywhere.com/updatefav', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: auth,
-        },
-        body: JSON.stringify({
-          newFav:newFav
-        })
-      }).then((response) => {
-        setIsLoading(false);
-
-        if (response.status === 200) {
-          // Only show header if adding as a fav
-          if (isNowFav) {
-            setOkTitle('Success');
-            setOkText('You have added this post to your favorites');
-            setShowOk(true);
-          }
-
-          setHeader(isNowFav);
-          AsyncStorage.setItem('favorites', newFav);
-        } else {
-          setOkTitle('Error');
-          setOkText('Server Error');
+    PostReq(
+      'https://nkchia.pythonanywhere.com/updatefav',
+      {newFav:newFav},
+      setIsLoading,
+      reportError,
+      () => {
+        // Only show header if adding as a fav
+        if (isNowFav) {
+          setOkTitle('Success');
+          setOkText('You have added this post to your favorites');
           setShowOk(true);
         }
-      }).catch((error) => {
-          // fetch error
-          setIsLoading(false);
-          setOkTitle('Error');
-          setOkText('' + error);
-          setShowOk(true);
-      });
-    });
+
+        setHeader(isNowFav);
+        AsyncStorage.setItem('favorites', newFav);
+      }
+    );
   }
 
   let display;
