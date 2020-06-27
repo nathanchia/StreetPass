@@ -24,6 +24,14 @@ export const fontFamily = {
     fontFamily: 'RobotoSlab-Regular',
 }
 
+export const redText = {
+    fontFamily: 'RobotoSlab-Regular',
+    color: 'red',
+    fontSize: 11,
+    alignSelf: 'center',
+    marginBottom: 10,
+}
+
 // For pass info entries and edit entries
 export const entryContainer = {
     width: '80%',

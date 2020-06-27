@@ -10,6 +10,12 @@ import RootStack from './stacks/RootStack';
 import { AuthContext } from './contexts/AuthContext'
 
 export default function App() {
+  // API endpoint
+  // Actual Production Server
+  //global.endpoint = 'https://nkchia.pythonanywhere.com/';
+  // Local Server
+  global.endpoint = 'http://10.0.2.2:5000/'
+
   // Returns true only when fonts are loaded
   let [fontsLoaded] = useFonts({
     'RobotoSlab-Regular': require('./assets/fonts/RobotoSlab-Regular.ttf'),
@@ -18,13 +24,18 @@ export default function App() {
   // Only used to know if client is logged in. Use SecureStorage for actual token
   const [userToken, setUserToken] = useState(null);
 
+  const validateEmail = (email => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  })
+
   const authContext = useMemo(() =>{
     return {
       signIn: (username, password, setResponseText, setIsLoading) => {
         if (username && password) {
           setIsLoading(true);
 
-          fetch('https://nkchia.pythonanywhere.com/signin', {
+          fetch(global.endpoint + 'signin', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -74,13 +85,12 @@ export default function App() {
           });
         }
       },
-      signUp: (username, password, confirmPass, displayName, navigation, setResponseText, setIsLoading) => {
-        if (username && password && confirmPass && displayName) {
-          if (password !== confirmPass) {
-            setResponseText('Passwords are different');
-          } else {
+      signUp: (username, password, email, displayName, navigation, setResponseText, setIsLoading) => {
+        if (username && password && email && displayName) {
+          let lowerEmail = String(email).toLowerCase();
+          if (validateEmail(lowerEmail)) {
             setIsLoading(true);
-            fetch('https://nkchia.pythonanywhere.com/create', {
+            fetch(global.endpoint + 'create', {
               method: 'POST',
               headers: {
                 Accept: 'application/json',
@@ -89,18 +99,19 @@ export default function App() {
               body: JSON.stringify({
                 username: username,
                 password: password,
+                email: lowerEmail,
                 displayName: displayName,
               })
             }).then((response) => {
               setIsLoading(false);
-
+  
               const contentType = response.headers.get("content-type");
               if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json().then(json => {
                   if (response.status === 200) {
-                    navigation.replace('ReturnSignInScreen');
+                    navigation.replace('ReturnSignInScreen',  {result: 'Successfully Created Account!'});
                   } else {
-                    // User already exists
+                    // Username or email already exists
                     setResponseText(json.msg);
                   }
                 });
@@ -113,6 +124,8 @@ export default function App() {
               setIsLoading(false);
               setResponseText('' + error);
             });
+          } else {
+            setResponseText('Invalid email address');
           }
         } else {
           setResponseText('Please fill out all fields');

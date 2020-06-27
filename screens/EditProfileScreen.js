@@ -45,7 +45,7 @@ export default ({navigation}) => {
     let newEntries = [...passEntries, {key: newKey ,title: newTitle, text: newValue}];
 
     PostReq(
-      'https://nkchia.pythonanywhere.com/updateentries', 
+      global.endpoint + 'updateentries', 
       {newEntries: JSON.stringify(newEntries)}, 
       setIsLoading,
       reportError,
@@ -64,7 +64,7 @@ export default ({navigation}) => {
     ];
 
     PostReq(
-      'https://nkchia.pythonanywhere.com/updateentries', 
+      global.endpoint + 'updateentries', 
       {newEntries: JSON.stringify(newEntries)}, 
       setIsLoading,
       reportError,
@@ -78,7 +78,7 @@ export default ({navigation}) => {
     let newEntries = passEntries.filter((entry) => entry.key !== targetKey);
 
     PostReq(
-      'https://nkchia.pythonanywhere.com/updateentries', 
+      global.endpoint + 'updateentries', 
       {newEntries: JSON.stringify(newEntries)}, 
       setIsLoading,
       reportError,

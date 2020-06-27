@@ -4,10 +4,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import SubmitButton from '../components/SubmitButton';
 import * as Styles from '../styles/master';
 
-export default ({navigation}) => {
+export default ({route, navigation}) => {
   return (
     <View style={styles.returnContainer} >
-        <Text style={styles.returnText}>{'Successfully Created Account!'}</Text>
+        <Text style={styles.returnText}>{route.params.result}</Text>
         <SubmitButton containerStyle={styles.largerButton} title='Return to Sign in' onPress={()=>{navigation.pop()}}/>
     </View>
   )
@@ -21,7 +21,8 @@ const styles = StyleSheet.create({
     }, returnText : {
         ...Styles.fontFamily,
         fontSize : 15,
-        marginBottom : 25
+        marginBottom : 25,
+        textAlign:'center'
     }, largerButton : {
       width: '70%',
     }

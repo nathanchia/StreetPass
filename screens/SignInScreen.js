@@ -35,14 +35,24 @@ export default ({ navigation }) => {
             authFunctions.signIn(username, password, setResponseText, setIsLoading);
           }}/>
 
-          <TouchableOpacity style={styles.createAccountContainer} onPress={()=>{
+          <TouchableOpacity style={{marginTop : 15}} onPress={()=>{
             setUsername('');
             setPassword('');
             setResponseText('');
             navigation.push('CreateAccountScreen');
             }} 
           >
-            <Text style={styles.createAccountText}>Create Account Instead</Text>
+            <Text style={styles.smallText}>Create Account Instead</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{marginTop : 10}} onPress={()=>{
+            setUsername('');
+            setPassword('');
+            setResponseText('');
+            navigation.push('ForgotPasswordScreen');
+            }} 
+          >
+            <Text style={styles.smallText}>Forgot Password</Text>
           </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback >
@@ -80,16 +90,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   }, 
   responseText : {
-    ...Styles.fontFamily,
-    marginBottom: 10,
-    fontSize : 11,
-    color: 'red',
-    alignSelf: 'center',
+    ...Styles.redText,
   },
-  createAccountContainer : {
-    marginTop : 15,
-  }, 
-  createAccountText : {
+  smallText : {
     ...Styles.fontFamily,
     fontSize : 11,
     textDecorationLine : 'underline',

@@ -58,7 +58,7 @@ export default ({ navigation }) => {
         }
 
         PostReq(
-          'https://nkchia.pythonanywhere.com/ping', 
+          global.endpoint + 'ping', 
           {maxDistance: maxDistance, latitude: coords.latitude, longitude: coords.longitude},
           setIsLoading,
           reportError,

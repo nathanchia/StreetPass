@@ -24,6 +24,10 @@ export default function (url, body, setIsLoading, reportError, callbackFunc) {
             setIsLoading(false);
             if (response.status === 200) {
                 callbackFunc(response);
+            } else if (response.status === 401 || response.status === 409) {
+                response.json().then(json => {
+                    reportError(json.msg);
+                })
             } else {
                 reportError('Server error');
             }

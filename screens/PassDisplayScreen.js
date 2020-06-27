@@ -63,7 +63,7 @@ export default ({ route, navigation }) => {
   // On navigate, GET the entries of the pass and whether pass is already favorited or not
   useEffect(()=> {
     let targetId = route.params.passEntry.key;
-    let url = 'https://nkchia.pythonanywhere.com/getpass?userid=' + targetId;
+    let url = global.endpoint + 'getpass?userid=' + targetId;
 
     SecureStore.getItemAsync('user').then((user) => {
       let token = JSON.parse(user).token;
@@ -110,7 +110,7 @@ export default ({ route, navigation }) => {
   // Changes header after POST as well
   const favHandler = (newFav, isNowFav) => {
     PostReq(
-      'https://nkchia.pythonanywhere.com/updatefav',
+      global.endpoint + 'updatefav',
       {newFav:newFav},
       setIsLoading,
       reportError,

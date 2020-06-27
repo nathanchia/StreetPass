@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Switch, StyleSheet, Slider, Text, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Switch, StyleSheet, Slider, Text, Keyboard, TouchableWithoutFeedback, TouchableHighlight } from "react-native";
 import { AsyncStorage } from 'react-native';
 import { Dimensions } from "react-native";
 import * as SecureStore from 'expo-secure-store';
@@ -66,7 +66,7 @@ export default SettingsScreen = ({navigation}) => {
         // User has a new display name, post to server
         if (oldDisplayName != displayName) {
             PostReq(
-                'https://nkchia.pythonanywhere.com/changename',
+                global.endpoint + 'changename',
                 {newName: displayName},
                 setIsLoading,
                 reportError,
@@ -102,10 +102,19 @@ export default SettingsScreen = ({navigation}) => {
                     onChangeText={setDisplayName}
                     maxLength={18}
                     field={'Change your display name'}   
-                    containerStyle={{width:'100%', marginBottom: 70}} 
+                    containerStyle={styles.nameContainer} 
                 />
 
-                <View style={{...styles.header, marginBottom: 25}}>
+                <TouchableHighlight 
+                    style={styles.passContainer}
+                    onPress={()=> {
+                        navigation.navigate('ChangePassScreen');
+                    }}
+                >
+                    <Text style={{...styles.title, textDecorationLine:'underline'}}>{'Change Password'}</Text>
+                </TouchableHighlight>
+
+                <View style={styles.header}>
                     <Text style={styles.title}>{'No distance filter'}</Text>
                     <Switch
                         trackColor={{ false: '#767577', true: '#FF9F2E' }}
@@ -151,13 +160,22 @@ const styles = StyleSheet.create({
     settingsContainer: {
         padding: '10%',
     },  
+    nameContainer: {
+        width:'100%', 
+        marginBottom: 40
+    }, 
+    passContainer: {
+        width: 150,
+        marginBottom:25, 
+    },
     title: {
         ...Styles.fontFamily,
         fontSize: 17,
-    },
+    }, 
     header: {
         flexDirection:'row',
         justifyContent: 'space-between',
+        marginBottom: 25
     },
     slider: {
         width: '100%',

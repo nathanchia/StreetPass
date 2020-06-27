@@ -96,12 +96,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     validEntry : {
-        ...Styles.fontFamily,
+        ...Styles.redText,
+        marginBottom: 0,
         position: 'absolute',
-        alignSelf: 'center',
-        fontSize: 11,
         bottom: 130,
-        color: 'red',
     },
     saveButton : {
         position: 'absolute',

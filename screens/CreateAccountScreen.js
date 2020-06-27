@@ -11,7 +11,7 @@ export default ({navigation}) => {
   const authFunctions = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPass, setConfirmPass] = useState('');
+  const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [responseText, setResponseText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ export default ({navigation}) => {
           <SpinnerModal visible={isLoading} />
           <InfoInput autoCapitalize={'none'} field='Username' onChangeText={setUsername} value={username}/>
           <InfoInput  autoCapitalize={'none'} field='Password' onChangeText={setPassword} value={password} secure={true}/>
-          <InfoInput  autoCapitalize={'none'} field='Confirm Password' onChangeText={setConfirmPass} value={confirmPass} secure={true}/>
+          <InfoInput  autoCapitalize={'none'} field='Email' onChangeText={setEmail} value={email}/>
           <InfoInput field='Display Name' maxLength={18} onChangeText={setDisplayName} value={displayName}/>
           <Text style={styles.responseText}>{responseText}</Text>
           <SubmitButton 
@@ -30,7 +30,7 @@ export default ({navigation}) => {
             onPress={()=>{authFunctions.signUp(
               username, 
               password, 
-              confirmPass, 
+              email, 
               displayName, 
               navigation, 
               setResponseText, 
@@ -49,9 +49,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   responseText : {
-    ...Styles.fontFamily,
-    marginBottom: 10,
-    fontSize : 11,
-    color: 'red'
+    ...Styles.redText,
   },
 });
