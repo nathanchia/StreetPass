@@ -12,9 +12,9 @@ import { AuthContext } from './contexts/AuthContext'
 export default function App() {
   // API endpoint
   // Actual Production Server
-  // global.endpoint = 'https://nkchia.pythonanywhere.com/';
+  global.endpoint = 'https://nkchia.pythonanywhere.com/';
   // Local Server
-  global.endpoint = 'http://10.0.2.2:5000/'
+  // global.endpoint = 'http://10.0.2.2:5000/'
 
   // Returns true only when fonts are loaded
   let [fontsLoaded] = useFonts({
