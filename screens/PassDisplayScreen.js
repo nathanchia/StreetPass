@@ -130,7 +130,13 @@ export default ({ route, navigation }) => {
   } else {
     display = 
       <ScrollView >
-        {entries.map((entry) => <DisplayEntry key={entry.key} title={entry.title} text={entry.text}/>)}
+        {entries.map(function(entry, index, array) {
+          if (array.length - 1 === index) {
+            return <DisplayEntry containerStyle={{marginBottom:30}} key={entry.key} title={entry.title} text={entry.text}/>;
+          } else {
+            return <DisplayEntry key={entry.key} title={entry.title} text={entry.text}/>;
+          }
+        } )}
       </ScrollView>;
   }
 

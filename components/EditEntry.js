@@ -8,12 +8,13 @@ import SmallModal from './SmallModal';
 
 // Displays an individual entry for the client and allows it to edit
 // Required props: onUpdate, title, text, onDelete, entryKey
+// Optional props: containerStyle
 const EditEntry = props => {
     const [deleteVisible, setDeleteVisible] = useState(false);
     const [editVisible, setEditVisible] = useState(false);
 
     return (
-        <View style={styles.entryContainer}>
+        <View style={{...styles.entryContainer, ...props.containerStyle}}>
             <SmallModal 
                 visible={deleteVisible}
                 title={'Are you sure?'}

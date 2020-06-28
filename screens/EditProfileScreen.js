@@ -91,16 +91,28 @@ export default ({navigation}) => {
   if (passEntries.length > 0) {
     entryComponent =
       <ScrollView>
-        {passEntries.map((entry) => 
-          <EditEntry 
-            onDelete={removeEntry} 
-            onUpdate={updateEntry}
-            title={entry.title} 
-            text={entry.text} 
-            key={entry.key}
-            entryKey={entry.key}
-          />
-        )}
+        {passEntries.map(function(entry, index, array) {
+          if (array.length - 1 === index) {
+            return <EditEntry 
+              containerStyle={{marginBottom: 30}}
+              onDelete={removeEntry} 
+              onUpdate={updateEntry}
+              title={entry.title} 
+              text={entry.text} 
+              key={entry.key}
+              entryKey={entry.key}
+            />;
+          } else {
+            return <EditEntry 
+              onDelete={removeEntry} 
+              onUpdate={updateEntry}
+              title={entry.title} 
+              text={entry.text} 
+              key={entry.key}
+              entryKey={entry.key}
+            />;
+          }
+        })}
       </ScrollView>;
   } else {
     entryComponent = 
