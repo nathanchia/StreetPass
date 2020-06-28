@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Switch, StyleSheet, Slider, Text, Keyboard, TouchableWithoutFeedback, TouchableHighlight } from "react-native";
+import { View, Switch, StyleSheet, Slider, Text, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from "react-native";
 import { AsyncStorage } from 'react-native';
 import { Dimensions } from "react-native";
 import * as SecureStore from 'expo-secure-store';
@@ -105,14 +105,15 @@ export default SettingsScreen = ({navigation}) => {
                     containerStyle={styles.nameContainer} 
                 />
 
-                <TouchableHighlight 
+                <TouchableOpacity 
+                    activeOpacity={0.6}
                     style={styles.passContainer}
                     onPress={()=> {
                         navigation.navigate('ChangePassScreen');
                     }}
                 >
                     <Text style={{...styles.title, textDecorationLine:'underline'}}>{'Change Password'}</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
 
                 <View style={styles.header}>
                     <Text style={styles.title}>{'No distance filter'}</Text>

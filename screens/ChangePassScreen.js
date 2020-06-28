@@ -10,11 +10,16 @@ import * as Styles from '../styles/master';
 export default ({navigation}) => {    
     const [oldPass, setOldPass] = useState('');
     const [newPass, setNewPass] = useState('');
+    const [confirmPass, setConfirmPass] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [responseText, setResponseText] = useState('');
 
-    const changePass = (oldPass, newPass) => {
-        PostReq(global.endpoint + 'changepass', {oldPassword:oldPass, newPassword:newPass}, setIsLoading, setResponseText, ()=>{navigation.pop();})
+    const changePass = (oldPass, newPass, confirmPass) => {
+        if (newPass !== confirmPass) {
+            setResponseText('New passwords do not match');
+        } else {
+            PostReq(global.endpoint + 'changepass', {oldPassword:oldPass, newPassword:newPass}, setIsLoading, setResponseText, ()=>{navigation.pop();})
+        }
     }    
 
     return (
@@ -23,8 +28,9 @@ export default ({navigation}) => {
                 <SpinnerModal visible={isLoading}/> 
                 <InfoInput secure={true} autoCapitalize={'none'} field={'Old Password'} value={oldPass} onChangeText={setOldPass}/>
                 <InfoInput secure={true} autoCapitalize={'none'} field={'New Password'} value={newPass} onChangeText={setNewPass}/>
+                <InfoInput secure={true} autoCapitalize={'none'} field={'Repeat new password'} value={confirmPass} onChangeText={setConfirmPass}/>
                 <Text style={styles.responseText}>{responseText}</Text>
-                <SubmitButton containerStyle={styles.largerButton} title='Change Password' onPress={()=>{changePass(oldPass, newPass);}}/>
+                <SubmitButton containerStyle={styles.largerButton} title='Change Password' onPress={()=>{changePass(oldPass, newPass, confirmPass);}}/>
             </View>
         </TouchableWithoutFeedback>
     )

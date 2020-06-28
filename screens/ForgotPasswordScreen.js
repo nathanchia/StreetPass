@@ -30,7 +30,11 @@ export default ({navigation}) => {
             }).then((response) => {
                 setIsLoading(false);
                 if (response.status === 200) {
-                    navigation.replace('ReturnSignInScreen',  {result: 'Reset password email has been sent to\n' + email + '\nif it was previously used to create an account.'});
+                    navigation.replace('ReturnSignInScreen',  {result: 'Reset password email has been sent to\n' + email});
+                } else if (response.status === 404) {
+                    response.json().then(json=> {
+                        setResponseText(json.msg);
+                    });
                 } else {
                     setResponseText('Server error');
                 }
